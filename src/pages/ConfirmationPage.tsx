@@ -1,25 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CheckCircle2, MessageCircle } from "lucide-react";
 import type { Order } from "@/services/orderService";
 import { SHOP_WHATSAPP } from "@/data/governorates";
 
-export const Route = createFileRoute("/confirmation")({
-  head: () => ({
-    meta: [
-      { title: "Merci pour votre commande — Aura Bio" },
-      { name: "description", content: "Votre commande Aura Bio a bien été enregistrée." },
-      { property: "og:title", content: "Merci pour votre commande — Aura Bio" },
-      { property: "og:description", content: "Votre commande Aura Bio a bien été enregistrée." },
-      { property: "og:url", content: "/confirmation" },
-      { name: "robots", content: "noindex" },
-    ],
-    links: [{ rel: "canonical", href: "/confirmation" }],
-  }),
-  component: ConfirmationPage,
-});
-
-function ConfirmationPage() {
+export function ConfirmationPage() {
   const [order, setOrder] = useState<Order | null>(null);
 
   useEffect(() => {
@@ -35,7 +20,7 @@ function ConfirmationPage() {
     <div className="container-page py-14">
       <div className="mx-auto max-w-md rounded-3xl border border-border bg-card p-8 text-center">
         <CheckCircle2 className="mx-auto h-14 w-14 text-primary" />
-        <h1 className="mt-4 text-2xl">Merci pour votre commande ! ❤️</h1>
+        <h1 className="mt-4 text-2xl font-bold">Merci pour votre commande ! ❤️</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Votre commande a bien été enregistrée. Nous allons vous contacter prochainement pour la
           confirmer.

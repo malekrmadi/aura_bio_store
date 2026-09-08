@@ -1,7 +1,7 @@
-import { Link } from "@tanstack/react-router";
+import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import { Menu, ShoppingBag, X } from "lucide-react";
-import logo from "@/assets/logo.jpg.asset.json";
+import logo from "@/assets/logo aura bio (1).jfif";
 import { useCart } from "@/lib/cart";
 
 const links = [
@@ -20,7 +20,7 @@ export function Header() {
       <div className="container-page grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-3">
         <Link to="/" className="flex min-w-0 items-center gap-2" onClick={() => setOpen(false)}>
           <img
-            src={logo.url}
+            src={logo}
             alt="Logo Aura Bio"
             className="h-10 w-auto shrink-0 rounded-md object-contain"
             width={120}
@@ -32,15 +32,18 @@ export function Header() {
         <div className="flex items-center gap-1">
           <nav className="mr-2 hidden items-center gap-1 md:flex">
             {links.map((l) => (
-              <Link
+              <NavLink
                 key={l.to}
                 to={l.to}
-                activeOptions={{ exact: l.to === "/" }}
-                activeProps={{ className: "text-primary font-semibold" }}
-                className="rounded-full px-3 py-2 text-sm text-foreground/80 transition-colors hover:text-primary"
+                end={l.to === "/"}
+                className={({ isActive }) =>
+                  `rounded-full px-3 py-2 text-sm transition-colors hover:text-primary ${
+                    isActive ? "font-semibold text-primary" : "text-foreground/80"
+                  }`
+                }
               >
                 {l.label}
-              </Link>
+              </NavLink>
             ))}
           </nav>
 
@@ -87,3 +90,4 @@ export function Header() {
     </header>
   );
 }
+

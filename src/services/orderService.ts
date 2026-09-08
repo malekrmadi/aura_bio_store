@@ -58,13 +58,29 @@ function generateOrderId(): string {
 }
 
 /**
- * Enregistrement de la commande.
- * Version actuelle : simulation locale.
- * Pour brancher Google Sheets, remplacer uniquement le contenu de cette
- * fonction par un fetch POST vers l'URL du Google Apps Script.
+ * URL Web App Google Apps Script.
+ * Remplacez la valeur ci-dessous par l'URL de votre déploiement Google Apps Script,
+ * ou définissez la variable VITE_GOOGLE_SHEETS_URL dans votre fichier .env.
  */
+export const GOOGLE_SHEETS_WEBHOOK_URL =
+  (import.meta.env["VITE_GOOGLE_SHEETS_URL"] as string | undefined) ||
+  "https://script.google.com/macros/s/AKfycbyjt0Py9O2slPfGUNy-KqW1n88rWH0H9q9-Hme5omVUSBpCGZ2RFmGckBt7PutHw0c/exec"; // Exemple : "https://script.google.com/macros/s/.../exec"
+
 export async function submitOrder(order: Order): Promise<{ success: boolean; order: Order }> {
-  await new Promise((r) => setTimeout(r, 600));
+  try {
+    if (GOOGLE_SHEETS_WEBHOOK_URL) {
+      await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors", // recommandé pour contourner les restrictions CORS de Google Apps Script
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(order),
+      });
+    }
+  } catch (err) {
+    console.warn("Impossible d'envoyer la commande à Google Sheets :", err);
+  }
+
+  // Sauvegarde locale de secours (Backup localStorage)
   if (typeof window !== "undefined") {
     try {
       const key = "aura-bio-orders";
@@ -74,5 +90,7 @@ export async function submitOrder(order: Order): Promise<{ success: boolean; ord
       /* ignore */
     }
   }
+
   return { success: true, order };
 }
+

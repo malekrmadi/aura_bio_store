@@ -1,31 +1,16 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { getDeliveryFee } from "@/services/orderService";
 
-export const Route = createFileRoute("/panier")({
-  head: () => ({
-    meta: [
-      { title: "Mon panier — Aura Bio" },
-      { name: "description", content: "Votre panier de soins naturels Aura Bio." },
-      { property: "og:title", content: "Mon panier — Aura Bio" },
-      { property: "og:description", content: "Votre panier de soins naturels Aura Bio." },
-      { property: "og:url", content: "/panier" },
-      { name: "robots", content: "noindex" },
-    ],
-    links: [{ rel: "canonical", href: "/panier" }],
-  }),
-  component: CartPage,
-});
-
-function CartPage() {
+export function CartPage() {
   const { items, subtotal, updateQuantity, removeItem } = useCart();
   const deliveryFee = getDeliveryFee();
 
   if (items.length === 0) {
     return (
       <div className="container-page py-16 text-center">
-        <h1 className="text-2xl">Votre panier est vide</h1>
+        <h1 className="text-2xl font-bold">Votre panier est vide</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Découvrez nos soins naturels et faites-vous plaisir.
         </p>
@@ -38,7 +23,7 @@ function CartPage() {
 
   return (
     <div className="container-page py-8">
-      <h1 className="text-3xl">Mon panier</h1>
+      <h1 className="text-3xl font-bold">Mon panier</h1>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_22rem]">
         <ul className="grid gap-4">
@@ -57,8 +42,7 @@ function CartPage() {
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <Link
-                      to="/produits/$slug"
-                      params={{ slug: item.slug }}
+                      to={`/produits/${item.slug}`}
                       className="truncate font-medium hover:text-primary"
                     >
                       {item.name}
@@ -102,7 +86,7 @@ function CartPage() {
         </ul>
 
         <aside className="h-fit rounded-2xl border border-border bg-card p-5">
-          <h2 className="text-lg">Total</h2>
+          <h2 className="text-lg font-semibold">Total</h2>
           <dl className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Sous-total</dt>
@@ -117,7 +101,7 @@ function CartPage() {
               <dd className="text-primary">{subtotal + deliveryFee} DT</dd>
             </div>
           </dl>
-          <Link to="/commande" search={{ direct: false }} className="btn-base btn-primary mt-5 w-full py-4">
+          <Link to="/commande" className="btn-base btn-primary mt-5 w-full py-4">
             Passer la commande
           </Link>
           <Link to="/produits" className="btn-base mt-2 w-full text-sm text-muted-foreground">

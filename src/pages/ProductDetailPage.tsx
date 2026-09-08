@@ -1,7 +1,8 @@
-import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { Check, ShoppingBag, Truck, Leaf } from "lucide-react";
 import { getProductBySlug } from "@/services/productService";
+import { mainProduct } from "@/data/products";
 import { ProductGallery } from "@/components/ProductGallery";
 import { OfferSelector, QuantitySelector } from "@/components/OfferSelector";
 import { Badge, Price, SectionTitle, Stars } from "@/components/Price";
@@ -9,40 +10,15 @@ import { Faq } from "@/components/Faq";
 import { setBuyNowItem, useCart } from "@/lib/cart";
 import type { OrderItem } from "@/services/orderService";
 
-export const Route = createFileRoute("/produits/$slug")({
-  loader: ({ params }) => {
-    const product = getProductBySlug(params.slug);
-    if (!product) throw notFound();
-    return { product };
-  },
-  head: ({ loaderData, params }) => {
-    if (!loaderData) {
-      return { meta: [{ title: "Produit introuvable — Aura Bio" }, { name: "robots", content: "noindex" }] };
-    }
-    const p = loaderData.product;
-    const description = `${p.shortDescription} — ${p.price} DT. Livraison partout en Tunisie, paiement à la livraison.`;
-    return {
-      meta: [
-        { title: `${p.name} — Aura Bio` },
-        { name: "description", content: description },
-        { property: "og:title", content: `${p.name} — Aura Bio` },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "product" },
-        { property: "og:url", content: `/produits/${params.slug}` },
-      ],
-      links: [{ rel: "canonical", href: `/produits/${params.slug}` }],
-    };
-  },
-  component: ProductPage,
-});
-
-function ProductPage() {
-  const { product } = Route.useLoaderData();
+export function ProductDetailPage() {
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { addItem } = useCart();
   const [offerIndex, setOfferIndex] = useState(0);
   const [extra, setExtra] = useState(1);
   const [added, setAdded] = useState(false);
+
+  const product = (slug ? getProductBySlug(slug) : null) ?? mainProduct;
 
   const offer = product.offers[offerIndex] ?? {
     quantity: 1,
@@ -69,7 +45,7 @@ function ProductPage() {
 
   const orderNow = () => {
     setBuyNowItem(item);
-    navigate({ to: "/commande", search: { direct: true } });
+    navigate("/commande?direct=true");
   };
 
   const addToCart = () => {
@@ -92,7 +68,7 @@ function ProductPage() {
               )}
             </div>
 
-            <h1 className="mt-3 text-3xl">{product.name}</h1>
+            <h1 className="mt-3 text-3xl font-bold">{product.name}</h1>
             <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
               <Stars rating={5} />
               <span>({product.reviews.length} avis)</span>
@@ -105,7 +81,7 @@ function ProductPage() {
             <p className="mt-3 text-base leading-relaxed text-foreground/90">{product.description}</p>
 
             <div className="mt-6">
-              <h2 className="mb-3 text-lg">Choisissez votre offre</h2>
+              <h2 className="mb-3 text-lg font-semibold">Choisissez votre offre</h2>
               <OfferSelector offers={product.offers} selected={offerIndex} onSelect={setOfferIndex} />
             </div>
 
@@ -180,13 +156,13 @@ function ProductPage() {
         </ol>
       </section>
 
-      {/* CONTENU VISUEL */}
+      {/* CONTENU VISUEL (AFFICHES) */}
       {product.contentBlocks.length > 0 && (
         <section className="container-page pb-10">
           <SectionTitle title="En savoir plus" />
           <div className="grid gap-6 md:grid-cols-3">
             {product.contentBlocks.map((block) => (
-              <figure key={block.image} className="overflow-hidden rounded-2xl border border-border bg-card">
+              <figure key={block.image} className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
                 <img
                   src={block.image}
                   alt={block.title ?? product.name}
@@ -195,7 +171,7 @@ function ProductPage() {
                 />
                 {(block.title || block.text) && (
                   <figcaption className="p-4">
-                    {block.title && <h3 className="text-base">{block.title}</h3>}
+                    {block.title && <h3 className="text-base font-semibold">{block.title}</h3>}
                     {block.text && <p className="mt-1 text-sm text-muted-foreground">{block.text}</p>}
                   </figcaption>
                 )}
@@ -234,7 +210,7 @@ function ProductPage() {
       {/* CTA FINAL */}
       <section className="container-page pb-12">
         <div className="rounded-3xl bg-primary px-6 py-10 text-center text-primary-foreground">
-          <h2 className="text-2xl text-primary-foreground">Prêt à prendre soin de vous ?</h2>
+          <h2 className="text-2xl text-primary-foreground font-semibold">Prêt à prendre soin de vous ?</h2>
           <button
             type="button"
             onClick={orderNow}
@@ -255,7 +231,7 @@ function ProductPage() {
 
       <div className="container-page pb-6 text-center text-sm">
         <Link to="/produits" className="text-primary underline">
-          ← Voir tous les produits
+          ← Voir nos produits
         </Link>
       </div>
     </div>

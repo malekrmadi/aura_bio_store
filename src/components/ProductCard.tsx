@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import type { Product } from "@/data/products";
 import { Badge, Price } from "@/components/Price";
 
@@ -11,8 +11,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-lg">
       <Link
-        to="/produits/$slug"
-        params={{ slug: product.slug }}
+        to={`/produits/${product.slug}`}
         className="relative block aspect-square overflow-hidden bg-muted"
       >
         <img
@@ -34,8 +33,7 @@ export function ProductCard({ product }: { product: Product }) {
           <Price price={product.price} oldPrice={product.oldPrice} />
         </div>
         <Link
-          to="/produits/$slug"
-          params={{ slug: product.slug }}
+          to={`/produits/${product.slug}`}
           className="btn-base btn-primary mt-3 w-full"
         >
           Voir le produit
@@ -44,3 +42,4 @@ export function ProductCard({ product }: { product: Product }) {
     </article>
   );
 }
+

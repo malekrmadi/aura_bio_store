@@ -1,33 +1,15 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import cover from "@/assets/cover.jpg.asset.json";
+import { Link } from "react-router-dom";
+import cover from "@/assets/cover aura bio.jpg";
 
-export const Route = createFileRoute("/a-propos")({
-  head: () => ({
-    meta: [
-      { title: "À propos — Aura Bio" },
-      {
-        name: "description",
-        content:
-          "Aura Bio est une marque tunisienne de soins naturels : des formules simples, douces et honnêtes pour le quotidien.",
-      },
-      { property: "og:title", content: "À propos — Aura Bio" },
-      { property: "og:description", content: "Marque tunisienne de soins naturels." },
-      { property: "og:url", content: "/a-propos" },
-    ],
-    links: [{ rel: "canonical", href: "/a-propos" }],
-  }),
-  component: AboutPage,
-});
-
-function AboutPage() {
+export function AboutPage() {
   return (
     <div className="container-page max-w-3xl py-10">
-      <h1 className="text-3xl">À propos d'Aura Bio</h1>
+      <h1 className="text-3xl font-bold">À propos d'Aura Bio</h1>
       <img
-        src={cover.url}
+        src={cover}
         alt="Univers naturel d'Aura Bio"
         loading="lazy"
-        className="mt-6 w-full rounded-2xl object-cover"
+        className="mt-6 w-full max-h-[350px] rounded-2xl object-cover"
       />
       <div className="mt-6 grid gap-4 text-base leading-relaxed text-foreground/90">
         <p>

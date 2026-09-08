@@ -1,26 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/conditions")({
-  head: () => ({
-    meta: [
-      { title: "Conditions générales — Aura Bio" },
-      {
-        name: "description",
-        content: "Conditions de commande, de livraison et d'utilisation des produits Aura Bio.",
-      },
-      { property: "og:title", content: "Conditions générales — Aura Bio" },
-      { property: "og:description", content: "Conditions de commande et de livraison Aura Bio." },
-      { property: "og:url", content: "/conditions" },
-    ],
-    links: [{ rel: "canonical", href: "/conditions" }],
-  }),
-  component: TermsPage,
-});
-
-function TermsPage() {
+export function TermsPage() {
   return (
     <div className="container-page max-w-2xl py-12">
-      <h1 className="text-3xl">Conditions générales</h1>
+      <h1 className="text-3xl font-bold">Conditions générales</h1>
       <div className="mt-6 grid gap-4 text-sm leading-relaxed text-foreground/90">
         <p>
           Les commandes passées sur ce site sont confirmées par téléphone avant expédition. Le

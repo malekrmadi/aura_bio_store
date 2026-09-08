@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ShieldCheck, Truck } from "lucide-react";
 import { OrderSummary } from "@/components/OrderSummary";
@@ -12,29 +12,6 @@ import {
   type OrderItem,
 } from "@/services/orderService";
 
-type Search = { direct?: boolean | undefined };
-
-export const Route = createFileRoute("/commande")({
-  validateSearch: (search: Record<string, unknown>): Search => ({
-    direct: search['direct'] === true || search['direct'] === "true",
-  }),
-  head: () => ({
-    meta: [
-      { title: "Finaliser ma commande — Aura Bio" },
-      {
-        name: "description",
-        content: "Renseignez votre nom, téléphone et adresse. Paiement à la livraison partout en Tunisie.",
-      },
-      { property: "og:title", content: "Finaliser ma commande — Aura Bio" },
-      { property: "og:description", content: "Commande simple, paiement à la livraison." },
-      { property: "og:url", content: "/commande" },
-      { name: "robots", content: "noindex" },
-    ],
-    links: [{ rel: "canonical", href: "/commande" }],
-  }),
-  component: CheckoutPage,
-});
-
 const emptyCustomer: Customer = {
   name: "",
   phone: "",
@@ -44,8 +21,9 @@ const emptyCustomer: Customer = {
   note: "",
 };
 
-function CheckoutPage() {
-  const { direct } = Route.useSearch();
+export function CheckoutPage() {
+  const [searchParams] = useSearchParams();
+  const direct = searchParams.get("direct") === "true";
   const navigate = useNavigate();
   const cart = useCart();
   const [items, setItems] = useState<OrderItem[]>([]);
@@ -64,7 +42,6 @@ function CheckoutPage() {
       setItems(cart.items);
       setReady(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [direct, cart.items.length]);
 
   const validate = () => {
@@ -104,13 +81,13 @@ function CheckoutPage() {
     } catch {
       /* ignore */
     }
-    navigate({ to: "/confirmation" });
+    navigate("/confirmation");
   };
 
   if (ready && items.length === 0) {
     return (
       <div className="container-page py-16 text-center">
-        <h1 className="text-2xl">Aucun produit à commander</h1>
+        <h1 className="text-2xl font-bold">Aucun produit à commander</h1>
         <Link to="/produits" className="btn-base btn-primary mt-6">
           Voir les produits
         </Link>
@@ -122,7 +99,7 @@ function CheckoutPage() {
 
   return (
     <div className="container-page py-8">
-      <h1 className="text-3xl">Finaliser ma commande</h1>
+      <h1 className="text-3xl font-bold">Finaliser ma commande</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         Pas de compte, pas de paiement en ligne. Vous payez à la réception.
       </p>

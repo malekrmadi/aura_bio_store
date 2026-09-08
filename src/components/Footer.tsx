@@ -1,6 +1,6 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { Phone, MessageCircle, Truck } from "lucide-react";
-import logo from "@/assets/logo.jpg.asset.json";
+import logo from "@/assets/logo aura bio (1).jfif";
 import { SHOP_PHONE, SHOP_WHATSAPP } from "@/data/governorates";
 
 export function Footer() {
@@ -8,7 +8,7 @@ export function Footer() {
     <footer className="mt-16 border-t border-border bg-secondary/50">
       <div className="container-page grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-3">
         <div>
-          <img src={logo.url} alt="Logo Aura Bio" className="h-12 w-auto rounded-md" />
+          <img src={logo} alt="Logo Aura Bio" className="h-12 w-auto rounded-md object-contain" />
           <p className="mt-3 text-sm text-muted-foreground">Le soin naturel, simplement.</p>
         </div>
 
