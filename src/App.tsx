@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { CartProvider } from "@/lib/cart";
 import { Layout } from "@/components/Layout";
 import { HomePage } from "@/pages/HomePage";
@@ -11,11 +12,27 @@ import { AboutPage } from "@/pages/AboutPage";
 import { ContactPage } from "@/pages/ContactPage";
 import { DeliveryPage } from "@/pages/DeliveryPage";
 import { TermsPage } from "@/pages/TermsPage";
+import { initMetaPixel, trackPageView } from "@/lib/metaPixel";
+
+function MetaPixelTracker() {
+  const location = useLocation();
+
+  useEffect(() => {
+    initMetaPixel();
+  }, []);
+
+  useEffect(() => {
+    trackPageView();
+  }, [location.pathname, location.search]);
+
+  return null;
+}
 
 export default function App() {
   return (
     <CartProvider>
       <BrowserRouter>
+        <MetaPixelTracker />
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
@@ -35,3 +52,4 @@ export default function App() {
     </CartProvider>
   );
 }
+

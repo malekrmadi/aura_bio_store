@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
-import { Check, ShoppingBag, Truck, Leaf } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Check, ShoppingBag, Truck, Leaf, ShieldCheck, Flame } from "lucide-react";
 import { getProductBySlug } from "@/services/productService";
 import { mainProduct } from "@/data/products";
 import { ProductGallery } from "@/components/ProductGallery";
@@ -9,6 +9,7 @@ import { Badge, Price, SectionTitle, Stars } from "@/components/Price";
 import { Faq } from "@/components/Faq";
 import { setBuyNowItem, useCart } from "@/lib/cart";
 import type { OrderItem } from "@/services/orderService";
+import { trackAddToCart, trackInitiateCheckout, trackViewContent } from "@/lib/metaPixel";
 
 export function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -19,6 +20,13 @@ export function ProductDetailPage() {
   const [added, setAdded] = useState(false);
 
   const product = (slug ? getProductBySlug(slug) : null) ?? mainProduct;
+
+  // Déclenchement de l'événement Meta Pixel ViewContent à l'affichage du produit
+  useEffect(() => {
+    if (product) {
+      trackViewContent(product);
+    }
+  }, [product]);
 
   const offer = product.offers[offerIndex] ?? {
     quantity: 1,
@@ -44,11 +52,13 @@ export function ProductDetailPage() {
   );
 
   const orderNow = () => {
+    trackInitiateCheckout([item], total);
     setBuyNowItem(item);
     navigate("/commande?direct=true");
   };
 
   const addToCart = () => {
+    trackAddToCart(item);
     addItem(item);
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
@@ -61,17 +71,21 @@ export function ProductDetailPage() {
           <ProductGallery images={product.images} name={product.name} />
 
           <div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 items-center">
               {product.badge && <Badge>{product.badge}</Badge>}
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800 border border-amber-200">
+                <Flame className="h-3.5 w-3.5 text-amber-600 fill-amber-600" />
+                طلب مرتفع في تونس
+              </span>
               {product.oldPrice && product.oldPrice > product.price && (
-                <Badge tone="soft">{`-${Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%`}</Badge>
+                <Badge tone="soft">{`توفير -${Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%`}</Badge>
               )}
             </div>
 
             <h1 className="mt-3 text-3xl font-bold">{product.name}</h1>
             <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
               <Stars rating={5} />
-              <span>({product.reviews.length} avis)</span>
+              <span>({product.reviews.length} تقييمات clients)</span>
             </div>
 
             <div className="mt-4">
@@ -81,7 +95,9 @@ export function ProductDetailPage() {
             <p className="mt-3 text-base leading-relaxed text-foreground/90">{product.description}</p>
 
             <div className="mt-6">
-              <h2 className="mb-3 text-lg font-semibold">Choisissez votre offre</h2>
+              <h2 className="mb-3 text-lg font-bold flex justify-between items-center">
+                <span>اختر العرض المناسب • Choisissez votre offre</span>
+              </h2>
               <OfferSelector offers={product.offers} selected={offerIndex} onSelect={setOfferIndex} />
             </div>
 
@@ -92,21 +108,31 @@ export function ProductDetailPage() {
             )}
 
             <div className="mt-6 grid gap-3">
-              <button type="button" onClick={orderNow} className="btn-base btn-primary w-full py-4 text-lg">
-                Commander maintenant — {total} DT
+              <button
+                type="button"
+                onClick={orderNow}
+                className="btn-base btn-primary w-full py-4 text-xl font-bold shadow-lg shadow-primary/25 hover:scale-[1.01] transition-all"
+              >
+                اطلب الآن — Commander maintenant ({total} DT)
               </button>
-              <button type="button" onClick={addToCart} className="btn-base btn-outline w-full">
+              <button type="button" onClick={addToCart} className="btn-base btn-outline w-full py-3">
                 <ShoppingBag className="h-4 w-4" />
-                {added ? "Ajouté au panier ✓" : "Ajouter au panier"}
+                {added ? "تمت الإضافة للسلة ✓" : "أضف إلى السلة — Ajouter au panier"}
               </button>
             </div>
 
-            <div className="mt-5 grid gap-2 text-sm text-muted-foreground">
-              <p className="flex items-center gap-2">
-                <Truck className="h-4 w-4 text-primary" /> Livraison partout en Tunisie — paiement à la livraison
+            <div className="mt-5 grid gap-2.5 rounded-2xl bg-secondary/60 p-4 text-sm font-medium">
+              <p className="flex items-center gap-2 text-foreground">
+                <Truck className="h-4 w-4 text-primary shrink-0" />
+                <span>توصيل سريع لجميع الولايات 🇹🇳 (24h - 72h)</span>
               </p>
-              <p className="flex items-center gap-2">
-                <Leaf className="h-4 w-4 text-primary" /> Ingrédients naturels
+              <p className="flex items-center gap-2 text-foreground">
+                <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
+                <span>الدفع عند الاستلام بعد المعاينة (Paiement à la livraison)</span>
+              </p>
+              <p className="flex items-center gap-2 text-foreground">
+                <Leaf className="h-4 w-4 text-primary shrink-0" />
+                <span>مكونات طبيعية 100% غنية وفعالة</span>
               </p>
             </div>
           </div>
@@ -115,12 +141,12 @@ export function ProductDetailPage() {
 
       {/* BÉNÉFICES */}
       <section className="container-page py-10">
-        <SectionTitle title="Pourquoi l'utiliser ?" />
+        <SectionTitle title="لماذا هذا المنتج ؟ • Pourquoi l'utiliser ?" />
         <ul className="mx-auto grid max-w-2xl gap-3">
           {product.benefits.map((b) => (
             <li key={b} className="flex items-start gap-3 rounded-xl border border-border bg-card p-4">
               <Check className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-              <span className="text-sm">{b}</span>
+              <span className="text-sm font-medium">{b}</span>
             </li>
           ))}
         </ul>
@@ -129,12 +155,12 @@ export function ProductDetailPage() {
       {/* INGRÉDIENTS */}
       <section className="bg-secondary/50 py-10">
         <div className="container-page">
-          <SectionTitle title="Les ingrédients" />
+          <SectionTitle title="المكونات الطبيعية • Les ingrédients" />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {product.ingredients.map((ing) => (
-              <div key={ing} className="rounded-2xl bg-card p-5 text-center">
+              <div key={ing} className="rounded-2xl bg-card p-5 text-center shadow-xs">
                 <Leaf className="mx-auto h-6 w-6 text-primary" />
-                <p className="mt-2 text-sm font-medium">{ing}</p>
+                <p className="mt-2 text-sm font-semibold">{ing}</p>
               </div>
             ))}
           </div>
@@ -143,14 +169,14 @@ export function ProductDetailPage() {
 
       {/* MODE D'UTILISATION */}
       <section className="container-page py-10">
-        <SectionTitle title="Comment l'utiliser ?" />
+        <SectionTitle title="طريقة الاستعمال • Comment l'utiliser ?" />
         <ol className="mx-auto grid max-w-xl gap-3">
           {product.usage.map((step, i) => (
             <li key={step} className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
               <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
                 {i + 1}
               </span>
-              <span className="text-sm">{step}</span>
+              <span className="text-sm font-medium">{step}</span>
             </li>
           ))}
         </ol>
@@ -159,7 +185,7 @@ export function ProductDetailPage() {
       {/* CONTENU VISUEL (AFFICHES) */}
       {product.contentBlocks.length > 0 && (
         <section className="container-page pb-10">
-          <SectionTitle title="En savoir plus" />
+          <SectionTitle title="التفاصيل بالصور • En savoir plus" />
           <div className="grid gap-6 md:grid-cols-3">
             {product.contentBlocks.map((block) => (
               <figure key={block.image} className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
@@ -184,14 +210,14 @@ export function ProductDetailPage() {
       {/* AVIS */}
       <section className="bg-secondary/50 py-10">
         <div className="container-page">
-          <SectionTitle title="Avis clients" />
+          <SectionTitle title="آراء الحرفاء • Avis clients" />
           <div className="grid gap-4 md:grid-cols-3">
             {product.reviews.map((r) => (
-              <div key={r.name + r.text} className="rounded-2xl bg-card p-5">
+              <div key={r.name + r.text} className="rounded-2xl bg-card p-5 border border-border shadow-xs">
                 <Stars rating={r.rating} />
-                <p className="mt-2 text-sm leading-relaxed">« {r.text} »</p>
-                <p className="mt-3 text-xs font-medium text-muted-foreground">
-                  {r.name} — {r.city}
+                <p className="mt-2 text-sm leading-relaxed font-medium">« {r.text} »</p>
+                <p className="mt-3 text-xs font-bold text-primary">
+                  {r.name} — {r.city} (حريف(ة) مؤكد(ة))
                 </p>
               </div>
             ))}
@@ -201,7 +227,7 @@ export function ProductDetailPage() {
 
       {/* FAQ */}
       <section className="container-page py-10">
-        <SectionTitle title="Questions fréquentes" />
+        <SectionTitle title="الأسئلة الشائعة • Questions fréquentes" />
         <div className="mx-auto max-w-2xl">
           <Faq items={product.faq} />
         </div>
@@ -209,31 +235,33 @@ export function ProductDetailPage() {
 
       {/* CTA FINAL */}
       <section className="container-page pb-12">
-        <div className="rounded-3xl bg-primary px-6 py-10 text-center text-primary-foreground">
-          <h2 className="text-2xl text-primary-foreground font-semibold">Prêt à prendre soin de vous ?</h2>
+        <div className="rounded-3xl bg-primary px-6 py-10 text-center text-primary-foreground shadow-xl">
+          <h2 className="text-2xl sm:text-3xl text-primary-foreground font-bold">جاهز للعناية بشرتك ؟</h2>
+          <p className="mt-2 text-sm opacity-90">اطلب الآن واستفد من التوصيل السريع والدفع عند الاستلام</p>
           <button
             type="button"
             onClick={orderNow}
-            className="btn-base mt-5 bg-background py-4 text-lg text-primary hover:bg-cream"
+            className="btn-base mt-6 bg-background py-4 px-8 text-xl font-bold text-primary hover:bg-cream shadow-md transition-all hover:scale-105"
           >
-            Commander maintenant — {total} DT
+            اطلب الآن — Commander maintenant ({total} DT)
           </button>
-          <p className="mt-3 text-xs opacity-90">Paiement à la livraison • Livraison partout en Tunisie</p>
+          <p className="mt-3 text-xs opacity-90">الدفع عند الاستلام • التوصيل لجميع الولايات</p>
         </div>
       </section>
 
       {/* STICKY MOBILE */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 backdrop-blur md:hidden">
-        <button type="button" onClick={orderNow} className="btn-base btn-primary w-full py-4 text-base">
-          Commander — {total} DT
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 backdrop-blur md:hidden shadow-lg">
+        <button type="button" onClick={orderNow} className="btn-base btn-primary w-full py-4 text-lg font-bold">
+          اطلب الآن — {total} DT
         </button>
       </div>
 
       <div className="container-page pb-6 text-center text-sm">
-        <Link to="/produits" className="text-primary underline">
-          ← Voir nos produits
+        <Link to="/produits" className="text-primary underline font-medium">
+          ← العودة لبقية المنتجات (Tous les produits)
         </Link>
       </div>
     </div>
   );
 }
+

@@ -20,22 +20,22 @@ export function OfferSelector({
             key={offer.label}
             type="button"
             onClick={() => onSelect(i)}
-            className={`flex items-center justify-between gap-3 rounded-2xl border-2 p-4 text-left transition-colors ${
-              isActive ? "border-primary bg-secondary" : "border-border bg-card hover:border-sage"
+            className={`flex items-center justify-between gap-3 rounded-2xl border-2 p-4 text-left transition-all ${
+              isActive ? "border-primary bg-secondary/80 shadow-sm" : "border-border bg-card hover:border-sage"
             }`}
           >
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-semibold">{offer.label}</span>
+                <span className="font-semibold text-base">{offer.label}</span>
                 {offer.badge && (
-                  <span className="rounded-full bg-promo px-2 py-0.5 text-[11px] font-bold text-background">
+                  <span className="rounded-full bg-promo px-2.5 py-0.5 text-[11px] font-bold text-background animate-pulse">
                     {offer.badge}
                   </span>
                 )}
               </div>
               {offer.quantity > 1 && (
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Soit {perUnit.toFixed(2).replace(".", ",")} DT / produit
+                <p className="mt-1 text-xs text-muted-foreground dir-rtl">
+                  (فقط {perUnit.toFixed(2).replace(".", ",")} د.ت / للقطعة) • {offer.quantity} pièces
                 </p>
               )}
             </div>
@@ -55,23 +55,23 @@ export function QuantitySelector({
   onChange: (v: number) => void;
 }) {
   return (
-    <div className="flex items-center gap-3">
-      <span className="text-sm text-muted-foreground">Quantité</span>
-      <div className="flex items-center rounded-full border border-border">
+    <div className="flex items-center justify-between gap-3 rounded-xl bg-secondary/40 p-3">
+      <span className="text-sm font-medium">الكمية • Quantité</span>
+      <div className="flex items-center rounded-full border border-border bg-card">
         <button
           type="button"
           aria-label="Diminuer"
           onClick={() => onChange(Math.max(1, value - 1))}
-          className="grid h-11 w-11 place-items-center rounded-full hover:bg-secondary"
+          className="grid h-10 w-10 place-items-center rounded-full hover:bg-secondary transition-colors"
         >
           <Minus className="h-4 w-4" />
         </button>
-        <span className="w-8 text-center font-semibold">{value}</span>
+        <span className="w-8 text-center font-bold text-base">{value}</span>
         <button
           type="button"
           aria-label="Augmenter"
           onClick={() => onChange(value + 1)}
-          className="grid h-11 w-11 place-items-center rounded-full hover:bg-secondary"
+          className="grid h-10 w-10 place-items-center rounded-full hover:bg-secondary transition-colors"
         >
           <Plus className="h-4 w-4" />
         </button>
@@ -79,3 +79,4 @@ export function QuantitySelector({
     </div>
   );
 }
+
