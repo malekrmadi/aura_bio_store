@@ -66,7 +66,7 @@ function generateOrderId(): string {
  */
 export const GOOGLE_SHEETS_WEBHOOK_URL =
   (import.meta.env["VITE_GOOGLE_SHEETS_URL"] as string | undefined) ||
-  "https://script.google.com/macros/s/AKfycbxsGMFZxYqa2NQdsJFU9ksMn5jFNYXKsUA_7eLvqcnM5CbPrIThcGgZpOrfUHEAPhIu/exec"; // Exemple : "https://script.google.com/macros/s/.../exec"
+  "https://script.google.com/macros/s/AKfycbxxk9AkBS1QlHSOftHAETnACFMuvZZEpN8cX7Ro8oWVErqnw9CsD5M_4Y36QmIj9MQh/exec"; // Exemple : "https://script.google.com/macros/s/.../exec"
 
 export async function submitOrder(order: Order): Promise<{ success: boolean; order: Order }> {
   try {
