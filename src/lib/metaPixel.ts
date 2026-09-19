@@ -58,7 +58,6 @@ export function initMetaPixel(): void {
 
   if (META_PIXEL_ID) {
     window.fbq?.("init", META_PIXEL_ID);
-    console.log(`[Meta Pixel] Initialisé avec succès (ID: ${META_PIXEL_ID})`);
   }
   isInitialized = true;
 }
@@ -71,10 +70,6 @@ function trackEvent(eventName: string, data?: Record<string, unknown>): void {
 
   if (window.fbq && META_PIXEL_ID) {
     window.fbq("track", eventName, data);
-    console.log(`[Meta Pixel Event] ${eventName}`, data ?? "");
-  } else {
-    // Mode simulation / debug
-    console.log(`[Meta Pixel Simulation] ${eventName}`, data ?? "");
   }
 }
 

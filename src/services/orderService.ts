@@ -23,6 +23,7 @@ export type Customer = {
 export type Order = {
   orderId: string;
   createdAt: string;
+  notifyEmail: string;
   customer: Customer;
   items: OrderItem[];
   subtotal: number;
@@ -42,6 +43,7 @@ export function buildOrder(customer: Customer, items: OrderItem[]): Order {
   return {
     orderId: generateOrderId(),
     createdAt: new Date().toISOString(),
+    notifyEmail: "rmedimalik@gmail.com",
     customer,
     items,
     subtotal,
