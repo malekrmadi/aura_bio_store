@@ -13,7 +13,7 @@ declare global {
  * Peut être défini via la variable d'environnement VITE_META_PIXEL_ID dans votre fichier .env.
  */
 export const META_PIXEL_ID =
-  (import.meta.env["VITE_META_PIXEL_ID"] as string | undefined) || "1471739124847033";
+  (import.meta.env["VITE_META_PIXEL_ID"] as string | undefined) || "1456210659684934";
 
 let isInitialized = false;
 
