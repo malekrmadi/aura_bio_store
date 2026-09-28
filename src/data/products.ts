@@ -137,7 +137,7 @@ export const mainProduct: Product = {
 export const dihenKebritProduct: Product = {
   id: "dihen-kebrit-002",
   slug: "dehn-el-kebrit",
-  name: "دهن كبريت طبيعي (Dihen El Kebrit)",
+  name: "دهان كبريت طبيعي (Dahan El Kebrit)",
   category: "Soins de la peau",
   shortDescription: "مرهم الكبريت الطبيعي لمقاومة فطريات الأظافر والجلد والتسلخات",
   description:
@@ -176,7 +176,7 @@ export const dihenKebritProduct: Product = {
       name: "سامي",
       city: "أريانة",
       rating: 5,
-      text: "دهن كبريت ممتاز جربتو على الفطريات بين الصوابع ونحى الحكة من ثاني نهار.",
+      text: "دهان كبريت ممتاز جربتو على الفطريات بين الصوابع ونحى الحكة من ثاني نهار.",
     },
     {
       name: "مريم",
@@ -207,7 +207,7 @@ export const products: Product[] = [mainProduct, dihenKebritProduct];
 export const categories = [
   { id: "all", label: "جميع المنتجات", emoji: "✨" },
   { id: "Soins des pieds & corps", label: "فازلين الحبة السوداء", emoji: "🌿" },
-  { id: "Soins de la peau", label: "دهن كبريت طبيعي", emoji: "🟡" },
+  { id: "Soins de la peau", label: "دهان كبريت طبيعي", emoji: "🟡" },
 ];
 
 export const homeReviews: Review[] = [
