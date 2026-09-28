@@ -89,14 +89,14 @@ export function ProductDetailPage() {
 
   const validate = () => {
     const e: Record<string, string> = {};
-    if (customer.name.trim().length < 3)
-      e['name'] = "يرجى كتابة الاسم واللقب بشكل صحيح • Indiquez votre nom & prénom.";
-    const phone = customer.phone.replace(/\s/g, "");
-    if (!/^(\+216)?[2-59]\d{7}$/.test(phone))
-      e['phone'] = "رقم هاتف تونس غير صحيح (8 أرقام) • Numéro invalide (8 chiffres).";
+    if (customer.name.trim().length === 0)
+      e['name'] = "يرجى كتابة الاسم واللقب • Indiquez votre nom.";
+    const digitsOnly = customer.phone.replace(/\D/g, "");
+    if (digitsOnly.length !== 8)
+      e['phone'] = "يرجى كتابة 8 أرقام • Numéro invalide (8 chiffres).";
     if (!customer.governorate)
       e['governorate'] = "يرجى اختيار الولاية • Choisissez votre gouvernorat.";
-    if (customer.address.trim().length < 3)
+    if (customer.address.trim().length === 0)
       e['address'] = "يرجى كتابة العنوان والمدينة • Indiquez votre adresse.";
     setErrors(e);
     return Object.keys(e).length === 0;
