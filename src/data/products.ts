@@ -1,5 +1,6 @@
 import vaselineReal from "@/assets/vaseline-real.jpg";
 import dihenKebritReal from "@/assets/dihen-kebrit-real.jpg";
+import packDuoReal from "@/assets/pack-duo-real.jpg";
 import affiche1 from "@/assets/affiche1.jfif";
 import affiche2 from "@/assets/affiche 2.jfif";
 import affiche3 from "@/assets/affiche 3.jfif";
@@ -208,7 +209,7 @@ export const packDuoProduct: Product = {
   shortDescription: "باك متكامل 2 في 1 : فازلين بالحبة السوداء + دهان الكبريت الطبيعي بسعر استثنائي 39 DT",
   description:
     "العرض المزدوج الأكثر توفيراً وتكاملاً! احصل على فازلين بالحبة السوداء لتنعيم وترطيب الأقدام والمناطق المشققة، مع دهان الكبريت الطبيعي لمعالجة فطريات الأظافر والجلد. حل شامل 100% طبيعي بسعر 39 د.ت فقط بدلاً من 58 د.ت (توفير 19 د.ت).",
-  images: [vaselineReal, dihenKebritReal],
+  images: [packDuoReal, vaselineReal, dihenKebritReal],
   oldPrice: 58,
   price: 39,
   badge: "عرض خاص ⚡ OFFRE DUO -33%",
@@ -255,7 +256,7 @@ export const packDuoProduct: Product = {
   contentBlocks: [
     {
       type: "image",
-      image: vaselineReal,
+      image: packDuoReal,
       title: "باك التوفير المزدوج",
       text: "فازلين الحبة السوداء + دهان الكبريت لنتائج مذهلة.",
     },
