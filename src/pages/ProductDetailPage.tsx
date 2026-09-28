@@ -170,17 +170,21 @@ export function ProductDetailPage() {
 
             <p className="mt-3 text-base leading-relaxed text-foreground/90 font-medium">{product.description}</p>
 
-            <div className="mt-6">
-              <h2 className="mb-3 text-lg font-bold flex justify-between items-center">
-                <span>1. اختر العرض المناسب • Choisissez votre offre</span>
-              </h2>
-              <OfferSelector offers={product.offers} selected={offerIndex} onSelect={setOfferIndex} />
-            </div>
+            {product.offers && product.offers.length > 1 && (
+              <>
+                <div className="mt-6">
+                  <h2 className="mb-3 text-lg font-bold flex justify-between items-center">
+                    <span>1. اختر العرض المناسب • Choisissez votre offre</span>
+                  </h2>
+                  <OfferSelector offers={product.offers} selected={offerIndex} onSelect={setOfferIndex} />
+                </div>
 
-            {offer.quantity === 1 && (
-              <div className="mt-4">
-                <QuantitySelector value={extra} onChange={setExtra} />
-              </div>
+                {offer.quantity === 1 && (
+                  <div className="mt-4">
+                    <QuantitySelector value={extra} onChange={setExtra} />
+                  </div>
+                )}
+              </>
             )}
 
             {/* FORMULAIRE DE COMMANDE DIRECT ET ATTIRANT */}

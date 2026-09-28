@@ -200,15 +200,80 @@ export const dihenKebritProduct: Product = {
   ],
 };
 
-export const products: Product[] = [mainProduct, dihenKebritProduct];
+export const packDuoProduct: Product = {
+  id: "pack-duo-003",
+  slug: "pack-duo-vaseline-kebrit",
+  name: "باك التوفير المزدوج (فازلين + دهان كبريت)",
+  category: "Packs Économiques",
+  shortDescription: "باك متكامل 2 في 1 : فازلين بالحبة السوداء + دهان الكبريت الطبيعي بسعر استثنائي 39 DT",
+  description:
+    "العرض المزدوج الأكثر توفيراً وتكاملاً! احصل على فازلين بالحبة السوداء لتنعيم وترطيب الأقدام والمناطق المشققة، مع دهان الكبريت الطبيعي لمعالجة فطريات الأظافر والجلد. حل شامل 100% طبيعي بسعر 39 د.ت فقط بدلاً من 58 د.ت (توفير 19 د.ت).",
+  images: [vaselineReal, dihenKebritReal],
+  oldPrice: 58,
+  price: 39,
+  badge: "عرض خاص ⚡ OFFRE DUO -33%",
+  inStock: true,
+  ingredients: [
+    "زيت الحبة السوداء وشمع العسل (Vaseline)",
+    "الكبريت النقي وزيت شجرة الشاي (Dahan El Kebrit)",
+  ],
+  benefits: [
+    "عناية متكاملة 2 في 1 : ترطيب ومعالجة في نفس الوقت",
+    "تنعيم الأقدام والمناطق المشققة بالفازلين الطبيعي",
+    "القضاء على فطريات الأظافر والجلد بدهان الكبريت",
+    "توفير كبير : 39 د.ت فقط بدلاً من 58 د.ت (توفير 19 د.ت)",
+    "توصيل سريع لجميع الولايات والدفع عند الاستلام",
+  ],
+  usage: [
+    "استعمال فازلين الحبة السوداء للتنعيم والترطيب اليومي",
+    "دهن مرهم الكبريت مرتين يومياً على الفطريات والتسلخات",
+  ],
+  offers: [
+    { quantity: 1, price: 39, label: "باك التوفير (فازلين + دهان كبريت)" },
+  ],
+  reviews: [
+    {
+      name: "حسناء",
+      city: "تونس",
+      rating: 5,
+      text: "باك رائع واقتصادي برشا! الفازلين يرطب ودهان الكبريت نحى الفطريات. ينصح بيه!",
+    },
+    {
+      name: "كريم",
+      city: "نابل",
+      rating: 5,
+      text: "استغليت عرض 39 دينار ووصلني في يومين، نوعية ممتازة وتغليف محكم.",
+    },
+    {
+      name: "فاطمة",
+      city: "صفاقس",
+      rating: 5,
+      text: "منتجات ممتازة جداً، التوفير واضح والنتيجة ملحوظة من أول أسبوع.",
+    },
+  ],
+  faq: commonFaq,
+  contentBlocks: [
+    {
+      type: "image",
+      image: vaselineReal,
+      title: "باك التوفير المزدوج",
+      text: "فازلين الحبة السوداء + دهان الكبريت لنتائج مذهلة.",
+    },
+  ],
+};
+
+export const products: Product[] = [mainProduct, dihenKebritProduct, packDuoProduct];
 
 export const categories = [
   { id: "all", label: "جميع المنتجات", emoji: "✨" },
   { id: "Soins des pieds & corps", label: "فازلين الحبة السوداء", emoji: "🌿" },
   { id: "Soins de la peau", label: "دهان كبريت طبيعي", emoji: "🟡" },
+  { id: "Packs Économiques", label: "باك التوفير (Pack Duo)", emoji: "🎁" },
 ];
 
 export const homeReviews: Review[] = [
   ...mainProduct.reviews,
   ...dihenKebritProduct.reviews,
+  ...packDuoProduct.reviews,
 ];
+
