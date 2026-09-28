@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState, useRef } from "react";
-import { Check, ShoppingBag, Truck, Leaf, ShieldCheck, Flame, Send, CheckCircle2 } from "lucide-react";
+import { Check, ShoppingBag, Truck, Leaf, ShieldCheck, Flame, Send, CheckCircle2, Loader2 } from "lucide-react";
 import { getProductBySlug } from "@/services/productService";
 import { mainProduct } from "@/data/products";
 import { ProductGallery } from "@/components/ProductGallery";
@@ -138,10 +138,10 @@ export function ProductDetailPage() {
   };
 
   const fieldClass =
-    "mt-1 w-full rounded-xl border border-input bg-background px-4 py-3 text-base outline-none focus:border-primary transition-all focus:ring-2 focus:ring-primary/20";
+    "mt-1.5 w-full rounded-xl border border-emerald-200/90 bg-white dark:bg-card px-4 py-3 text-base text-foreground font-medium outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-500/15 shadow-xs transition-all";
 
   return (
-    <div className="pb-28 md:pb-10">
+    <div className="pb-12">
       <div className="container-page py-6">
         <div className="grid gap-8 lg:grid-cols-2 items-start">
           <ProductGallery images={product.images} name={product.name} />
@@ -183,30 +183,40 @@ export function ProductDetailPage() {
               </div>
             )}
 
-            {/* FORMULAIRE DE COMMANDE DIRECT SUR LA MÊME PAGE */}
-            <div ref={formRef} id="order-form" className="mt-8 rounded-3xl border-2 border-primary/40 bg-card p-5 sm:p-6 shadow-xl scroll-mt-6">
-              <div className="flex items-center gap-2.5 pb-4 border-b border-border">
-                <div className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground font-bold text-lg">
-                  2
+            {/* FORMULAIRE DE COMMANDE DIRECT ET ATTIRANT */}
+            <div
+              ref={formRef}
+              id="order-form"
+              className="mt-8 rounded-3xl border-2 border-emerald-600/40 bg-gradient-to-b from-amber-500/10 via-emerald-500/5 to-amber-500/10 p-5 sm:p-7 shadow-2xl scroll-mt-6 backdrop-blur-sm relative overflow-hidden"
+            >
+              {/* Badge Top Banner */}
+              <div className="bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-800 text-white text-center py-2.5 px-4 rounded-2xl text-xs sm:text-sm font-bold shadow-md mb-5 flex items-center justify-center gap-2">
+                <Flame className="h-4 w-4 text-amber-300 animate-pulse fill-amber-300" />
+                <span>طلب سريع ومباشر — الدفع عند الاستلام بعد المعاينة 🚚</span>
+              </div>
+
+              <div className="flex items-center gap-3 pb-4 border-b border-emerald-900/10">
+                <div className="grid h-10 w-10 place-items-center rounded-2xl bg-emerald-700 text-amber-300 font-extrabold text-xl shadow-sm">
+                  ✓
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-foreground">استمارة الطلب المباشر</h2>
-                  <p className="text-xs text-muted-foreground">ادخل معلوماتك هنا للدفع عند الاستلام</p>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-foreground">استمارة الطلب المباشر</h2>
+                  <p className="text-xs text-muted-foreground font-medium">ادخل معلوماتك هنا للدفع عند الاستلام</p>
                 </div>
               </div>
 
               {/* Récapitulatif rapide de l'offre sélectionnée */}
-              <div className="mt-4 rounded-xl bg-secondary/80 p-3 flex items-center justify-between text-sm">
+              <div className="mt-4 rounded-2xl bg-emerald-900 text-white p-4 flex items-center justify-between shadow-lg border border-emerald-700/50">
                 <div className="flex items-center gap-3">
-                  <img src={product.images[0]} alt={product.name} className="h-12 w-12 rounded-lg object-cover border border-border" />
+                  <img src={product.images[0]} alt={product.name} className="h-14 w-14 rounded-xl object-cover border-2 border-emerald-600 shadow-sm" />
                   <div>
-                    <p className="font-bold text-xs sm:text-sm">{offer.label}</p>
-                    <p className="text-xs text-muted-foreground">التوصيل : {deliveryFee} DT</p>
+                    <p className="font-bold text-sm text-white">{offer.label}</p>
+                    <p className="text-xs text-emerald-200">التوصيل : {deliveryFee} DT</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-muted-foreground">المجموع الكلي</p>
-                  <p className="text-lg font-bold text-primary">{finalGrandTotal} DT</p>
+                  <p className="text-xs text-emerald-200 font-medium">المجموع الكلي</p>
+                  <p className="text-xl font-black text-amber-300">{finalGrandTotal} DT</p>
                 </div>
               </div>
 
@@ -218,6 +228,7 @@ export function ProductDetailPage() {
                   <input
                     id="name"
                     className={fieldClass}
+                    placeholder="Nom et prénom"
                     maxLength={100}
                     value={customer.name}
                     onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
@@ -234,6 +245,7 @@ export function ProductDetailPage() {
                     type="tel"
                     inputMode="tel"
                     className={fieldClass}
+                    placeholder="22 123 456"
                     maxLength={20}
                     value={customer.phone}
                     onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
@@ -268,6 +280,7 @@ export function ProductDetailPage() {
                   <input
                     id="address"
                     className={fieldClass}
+                    placeholder="Adresse complète"
                     maxLength={300}
                     value={customer.address}
                     onChange={(e) => setCustomer({ ...customer, address: e.target.value, city: e.target.value })}
@@ -275,13 +288,13 @@ export function ProductDetailPage() {
                   {errors['address'] && <p className="mt-1 text-xs font-semibold text-destructive">{errors['address']}</p>}
                 </div>
 
-                <div className="rounded-xl bg-secondary/60 p-3.5 text-xs font-medium space-y-1.5 border border-border mt-1">
+                <div className="rounded-xl bg-emerald-950/5 dark:bg-emerald-950/30 p-3.5 text-xs font-medium space-y-2 border border-emerald-600/20 mt-1">
                   <p className="flex items-center gap-2 text-foreground font-bold">
-                    <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
+                    <ShieldCheck className="h-4 w-4 text-emerald-700 shrink-0" />
                     <span>الدفع عند الاستلام بعد معاينة طلبيتك</span>
                   </p>
                   <p className="flex items-center gap-2 text-foreground font-bold">
-                    <Truck className="h-4 w-4 text-primary shrink-0" />
+                    <Truck className="h-4 w-4 text-emerald-700 shrink-0" />
                     <span>توصيل سريع لجميع الولايات (24h-72h) — {deliveryFee} DT</span>
                   </p>
                 </div>
@@ -289,14 +302,21 @@ export function ProductDetailPage() {
                 <button
                   type="submit"
                   disabled={sending}
-                  className="btn-base btn-primary w-full py-4 text-xl font-bold shadow-lg shadow-primary/30 hover:scale-[1.01] transition-all disabled:opacity-70 mt-2"
+                  className={`btn-base w-full py-4 text-xl font-bold rounded-2xl shadow-xl transition-all duration-200 mt-2 ${
+                    sending
+                      ? "bg-emerald-800 text-white cursor-wait opacity-90 scale-[0.99]"
+                      : "bg-gradient-to-r from-emerald-600 via-emerald-700 to-emerald-800 hover:from-emerald-700 hover:to-emerald-900 text-white shadow-emerald-700/30 hover:scale-[1.01] active:scale-[0.98]"
+                  }`}
                 >
                   {sending ? (
-                    "جاري تسجيل الطلب..."
+                    <span className="flex items-center justify-center gap-3">
+                      <Loader2 className="h-6 w-6 animate-spin text-amber-300" />
+                      <span className="animate-pulse text-base sm:text-lg">جاري إرسال طلبك... يرجى الانتظار</span>
+                    </span>
                   ) : (
-                    <span className="flex items-center justify-center gap-2">
-                      <Send className="h-5 w-5" />
-                      تأكيد الطلب الآن — {finalGrandTotal} DT
+                    <span className="flex items-center justify-center gap-2.5">
+                      <Send className="h-5 w-5 text-amber-300" />
+                      <span>تأكيد الطلب الآن — {finalGrandTotal} DT</span>
                     </span>
                   )}
                 </button>
@@ -311,8 +331,8 @@ export function ProductDetailPage() {
         <SectionTitle title="لماذا هذا المنتج ؟ • Pourquoi l'utiliser ?" />
         <ul className="mx-auto grid max-w-2xl gap-3">
           {product.benefits.map((b) => (
-            <li key={b} className="flex items-start gap-3 rounded-xl border border-border bg-card p-4">
-              <Check className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+            <li key={b} className="flex items-start gap-3 rounded-xl border border-border bg-card p-4 shadow-xs">
+              <Check className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
               <span className="text-sm font-medium">{b}</span>
             </li>
           ))}
@@ -325,8 +345,8 @@ export function ProductDetailPage() {
           <SectionTitle title="المكونات الطبيعية • Les ingrédients" />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
             {product.ingredients.map((ing) => (
-              <div key={ing} className="rounded-2xl bg-card p-5 text-center shadow-xs">
-                <Leaf className="mx-auto h-6 w-6 text-primary" />
+              <div key={ing} className="rounded-2xl bg-card p-5 text-center shadow-xs border border-border/60">
+                <Leaf className="mx-auto h-6 w-6 text-emerald-600" />
                 <p className="mt-2 text-sm font-semibold">{ing}</p>
               </div>
             ))}
@@ -339,8 +359,8 @@ export function ProductDetailPage() {
         <SectionTitle title="طريقة الاستعمال • Comment l'utiliser ?" />
         <ol className="mx-auto grid max-w-xl gap-3">
           {product.usage.map((step, i) => (
-            <li key={step} className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+            <li key={step} className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 shadow-xs">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-emerald-700 text-sm font-bold text-white">
                 {i + 1}
               </span>
               <span className="text-sm font-medium">{step}</span>
@@ -358,7 +378,7 @@ export function ProductDetailPage() {
               <div key={r.name + r.text} className="rounded-2xl bg-card p-5 border border-border shadow-xs">
                 <Stars rating={r.rating} />
                 <p className="mt-2 text-sm leading-relaxed font-medium">« {r.text} »</p>
-                <p className="mt-3 text-xs font-bold text-primary">
+                <p className="mt-3 text-xs font-bold text-emerald-700">
                   {r.name} — {r.city} (حريف(ة) مؤكد(ة))
                 </p>
               </div>
@@ -375,34 +395,13 @@ export function ProductDetailPage() {
         </div>
       </section>
 
-      {/* CTA FINAL DE SCROLL */}
-      <section className="container-page pb-12">
-        <div className="rounded-3xl bg-primary px-6 py-10 text-center text-primary-foreground shadow-xl">
-          <h2 className="text-2xl sm:text-3xl text-primary-foreground font-bold">جاهز للعناية بشرتك ؟</h2>
-          <p className="mt-2 text-sm opacity-90">اطلب الآن واستفد من التوصيل السريع والدفع عند الاستلام</p>
-          <button
-            type="button"
-            onClick={scrollToForm}
-            className="btn-base mt-6 bg-background py-4 px-8 text-xl font-bold text-primary hover:bg-cream shadow-md transition-all hover:scale-105"
-          >
-            اطلب الآن — {finalGrandTotal} DT
-          </button>
-          <p className="mt-3 text-xs opacity-90">الدفع عند الاستلام • التوصيل لجميع الولايات</p>
-        </div>
-      </section>
-
-      {/* STICKY MOBILE BUTTON -> SCROLL DIRECT AU FORMULAIRE */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 p-3 backdrop-blur md:hidden shadow-lg">
-        <button type="button" onClick={scrollToForm} className="btn-base btn-primary w-full py-4 text-lg font-bold">
-          اطلب الآن — {finalGrandTotal} DT
-        </button>
-      </div>
-
-      <div className="container-page pb-6 text-center text-sm">
-        <Link to="/produits" className="text-primary underline font-medium">
+      {/* RETURN TO ALL PRODUCTS LINK */}
+      <div className="container-page py-6 text-center text-sm">
+        <Link to="/produits" className="text-emerald-700 hover:text-emerald-800 underline font-medium">
           ← العودة لبقية المنتجات (Tous les produits)
         </Link>
       </div>
     </div>
   );
 }
+
