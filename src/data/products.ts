@@ -1,6 +1,7 @@
 import vaselinePhoto1 from "@/assets/vaseline photo 1.jfif";
 import vaselinePhoto2 from "@/assets/vaseline photo 2.jfif";
 import vaselinePhoto3 from "@/assets/vaseline photo 3.jfif";
+import dihenKebritReal from "@/assets/dihen-kebrit-real.jpg";
 import dihenKebrit1 from "@/assets/dihen-kebrit-1.jpg";
 import dihenKebrit2 from "@/assets/dihen-kebrit-2.jpg";
 import affiche1 from "@/assets/affiche1.jfif";
@@ -143,7 +144,7 @@ export const dihenKebritProduct: Product = {
   shortDescription: "مرهم الكبريت الطبيعي لمقاومة فطريات الأظافر والجلد والتسلخات",
   description:
     "مرهم طبيعي فعال 100% مستخلص من الكبريت النقي والأعشاب الطبيعية. يمنحك حماية فائقة ضد فطريات الأظافر والجلد والتسلخات، ويهدئ الحكة والتهابات البشرة بسرعة من الاستعمالات الأولى.",
-  images: [dihenKebrit1, dihenKebrit2],
+  images: [dihenKebritReal, dihenKebrit1, dihenKebrit2],
   oldPrice: 35,
   price: 29,
   badge: "جديد 🔥 NOUVEAU",
@@ -194,6 +195,12 @@ export const dihenKebritProduct: Product = {
   ],
   faq: commonFaq,
   contentBlocks: [
+    {
+      type: "image",
+      image: dihenKebritReal,
+      title: "دهان الكبريت الأصيل",
+      text: "نتائج سريعة وملحوظة في معالجة فطريات الأظافر والجلد.",
+    },
     {
       type: "image",
       image: dihenKebrit1,
