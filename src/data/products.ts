@@ -1,6 +1,8 @@
 import vaselinePhoto1 from "@/assets/vaseline photo 1.jfif";
 import vaselinePhoto2 from "@/assets/vaseline photo 2.jfif";
 import vaselinePhoto3 from "@/assets/vaseline photo 3.jfif";
+import dihenKebrit1 from "@/assets/dihen-kebrit-1.jpg";
+import dihenKebrit2 from "@/assets/dihen-kebrit-2.jpg";
 import affiche1 from "@/assets/affiche1.jfif";
 import affiche2 from "@/assets/affiche 2.jfif";
 import affiche3 from "@/assets/affiche 3.jfif";
@@ -49,81 +51,71 @@ export type Product = {
 
 const commonFaq = [
   {
-    question: "Comment utiliser le produit ?",
-    answer:
-      "Appliquez une petite quantité sur une peau propre et massez doucement jusqu'à absorption.",
+    question: "كيفية استعمال المنتج ؟",
+    answer: "نظف المنطقة المصابة وجففها جيداً، ثم ادهن كمية مناسبة ودلك بلطف حتى يمتصها الجلد.",
   },
   {
-    question: "Combien de temps faut-il l'utiliser ?",
-    answer:
-      "Pour un confort optimal, une utilisation régulière, matin et/ou soir, est recommandée.",
+    question: "كم مرة يجب استعماله يومياً ؟",
+    answer: "للحصول على أفضل النتائج السريعة، ينصح باستعماله مرتين يومياً (صباحاً ومساءً).",
   },
   {
-    question: "Comment se passe la livraison ?",
-    answer:
-      "Nous vous appelons pour confirmer votre commande, puis vous êtes livré sous 24 à 72 heures.",
+    question: "كيف يتم التوصيل ؟",
+    answer: "نتصل بك هاتفياً لتأكيد العنوان والطلب، ثم يصلك الموصل خلال 24 إلى 72 ساعة.",
   },
   {
-    question: "La livraison est-elle disponible partout en Tunisie ?",
-    answer: "Oui, nous livrons dans les 24 gouvernorats.",
-  },
-  {
-    question: "Comment commander ?",
-    answer:
-      "Choisissez votre offre, cliquez sur « Commander maintenant », renseignez votre nom, téléphone et adresse. Vous payez à la livraison.",
+    question: "هل التوصيل متوفر لجميع الولايات ؟",
+    answer: "نعم، التوصيل متوفر لجميع 24 ولاية تونسية والدفع عند الاستلام.",
   },
 ];
 
 export const mainProduct: Product = {
   id: "foot-care-001",
   slug: "vaseline-huile-de-nigelle",
-  name: "Vaseline à l'huile de nigelle",
+  name: "فازلين بالحبة السوداء (Vaseline à l'huile de nigelle)",
   category: "Soins des pieds & corps",
-  shortDescription: "Vaseline + huile de nigelle + cire d'abeille",
+  shortDescription: "فازلين + زيت الحبة السوداء + شمع العسل",
   description:
-    "Un soin riche et naturel conçu pour nourrir et adoucir les zones sèches : talons, coudes, genoux et mains. Sa texture onctueuse pénètre facilement et laisse la peau douce et confortable.",
+    "عناية فائقة وطبيعية لتنعيم وترطيب المناطق الجافة والمشققة: الكعبين، المرفقين، الركبتين واليدين. تركيبة غنية تمتص بسرعة وتمنحك نعومة ورطوبة تدوم طوال اليوم.",
   images: [vaselinePhoto1, vaselinePhoto2, vaselinePhoto3],
   oldPrice: 35,
   price: 29,
-  badge: "BEST SELLER",
+  badge: "الأكثر مبيعاً 🔥 BEST SELLER",
   inStock: true,
-  ingredients: ["Huile de nigelle", "Cire d'abeille", "Vaseline"],
+  ingredients: ["زيت الحبة السوداء (Huile de nigelle)", "شمع العسل (Cire d'abeille)", "فازلين نقي (Vaseline)"],
   benefits: [
-    "Nourrit intensément la peau",
-    "Aide à maintenir la douceur",
-    "Idéal pour les zones sèches",
-    "Texture agréable et non collante",
-    "Utilisation simple, matin ou soir",
+    "يغذي البشرة الجافة والمشققة بعمق",
+    "يقضي على تشققات الكعبين والأقدام بسرعة",
+    "تركيبة طبيعية 100% تمنح ملمساً ناعماً",
+    "استعمال سهل وسريع صباحاً ومساءً",
   ],
   usage: [
-    "Nettoyer et sécher la zone",
-    "Appliquer une petite quantité",
-    "Masser doucement",
-    "Utiliser régulièrement",
+    "تنظيف وتجفيف المنطقة الجافة",
+    "وضع كمية مناسبة من الفازلين",
+    "التدليك بلطف حتى الامتصاص",
   ],
   offers: [
-    { quantity: 1, price: 29, label: "1 produit" },
-    { quantity: 2, price: 49, label: "2 produits", badge: "MEILLEURE OFFRE" },
-    { quantity: 3, price: 69, label: "3 produits" },
+    { quantity: 1, price: 29, label: "قطعة واحدة (1 Produit)" },
+    { quantity: 2, price: 49, label: "قطعتين (2 Produits)", badge: "العرض الأفضل 🔥 MEILLEURE OFFRE" },
+    { quantity: 3, price: 69, label: "3 قطع (3 Produits)" },
   ],
   reviews: [
     {
-      name: "Amel",
-      city: "Tunis",
+      name: "أمل",
+      city: "تونس",
       rating: 5,
-      text: "J'ai beaucoup aimé le produit, mes pieds sont beaucoup plus doux.",
+      text: "منتج رائع جداً، قدمي أصبحت ناعمة من الأيام الأولى. ننصح بيه!",
     },
     {
-      name: "Sonia",
-      city: "Sousse",
+      name: "سنية",
+      city: "سوسة",
       rating: 5,
-      text: "Texture très agréable et odeur naturelle. Je recommande vraiment.",
+      text: "ريحة طبيعية وتركيبة تحفون برشا. التوصيل كان سريع.",
     },
     {
-      name: "Mohamed",
-      city: "Sfax",
-      rating: 4,
-      text: "Livraison rapide et produit conforme à la description.",
+      name: "محمد",
+      city: "صفاقس",
+      rating: 5,
+      text: "وصلتني في 48 ساعة، نوعية ممتازة.",
     },
   ],
   faq: commonFaq,
@@ -131,59 +123,101 @@ export const mainProduct: Product = {
     {
       type: "image",
       image: affiche1,
-      title: "Des ingrédients naturels",
-      text: "Vaseline, huile de nigelle et cire d'abeille : une formule simple et efficace.",
+      title: "مكونات طبيعية 100%",
+      text: "فازلين، زيت حبة البركة وشمع العسل لنتائج سريعة وآمنة.",
     },
     {
       type: "image",
       image: affiche2,
-      title: "Un soin pensé pour vous",
-      text: "Idéal pour les peaux sèches et les zones qui demandent plus d'attention.",
-    },
-    {
-      type: "image",
-      image: affiche3,
-      title: "Conseils d'utilisation",
-      text: "Une petite quantité suffit, chaque jour, pour garder la peau douce.",
+      title: "عناية خاصة ببشرتك",
+      text: "مثالي للمناطق الأكثر جفافاً وتشققا.",
     },
   ],
 };
 
-export const products: Product[] = [mainProduct];
+export const dihenKebritProduct: Product = {
+  id: "dihen-kebrit-002",
+  slug: "dehn-el-kebrit",
+  name: "دهن كبريت طبيعي (Dihen El Kebrit)",
+  category: "Soins de la peau",
+  shortDescription: "مرهم الكبريت الطبيعي لمقاومة فطريات الأظافر والجلد والتسلخات",
+  description:
+    "مرهم طبيعي فعال 100% مستخلص من الكبريت النقي والأعشاب الطبيعية. يمنحك حماية فائقة ضد فطريات الأظافر والجلد والتسلخات، ويهدئ الحكة والتهابات البشرة بسرعة من الاستعمالات الأولى.",
+  images: [dihenKebrit1, dihenKebrit2],
+  oldPrice: 35,
+  price: 29,
+  badge: "جديد 🔥 NOUVEAU",
+  inStock: true,
+  ingredients: [
+    "الكبريت النقي (Soufre pur)",
+    "زيت شجرة الشاي (Tea Tree Oil)",
+    "شمع العسل الطبيعي (Cire d'abeille)",
+    "خلاصة الليمون والأعشاب",
+  ],
+  benefits: [
+    "مقاومة فعالة وسريعة لفطريات الأظافر (فطريات القدمين واليدين)",
+    "القضاء على فطريات الجلد والتسلخات والحكة",
+    "تطهير البشرة وتهدئة التهيج والاحمرار بسرعة",
+    "تركيبة طبيعية 100% بدون مواد كيميائية ضارة",
+    "نتائج ملحوظة من الأيام الأولى للإستعمال",
+  ],
+  usage: [
+    "تنظيف وتجفيف المنطقة المصابة جيداً",
+    "دهن كمية مناسبة من مرهم الكبريت على المنطقة",
+    "التدليك بلطف حتى يمتصه الجلد",
+    "الاستعمال مرتين يومياً (صباحاً ومساءً) لنتائج سريعة",
+  ],
+  offers: [
+    { quantity: 1, price: 29, label: "قطعة واحدة (1 Produit)" },
+    { quantity: 2, price: 49, label: "قطعتين (2 Produits)", badge: "العرض الأفضل 🔥 MEILLEURE OFFRE" },
+    { quantity: 3, price: 69, label: "3 قطع (3 Produits)" },
+  ],
+  reviews: [
+    {
+      name: "سامي",
+      city: "أريانة",
+      rating: 5,
+      text: "دهن كبريت ممتاز جربتو على الفطريات بين الصوابع ونحى الحكة من ثاني نهار.",
+    },
+    {
+      name: "مريم",
+      city: "منستير",
+      rating: 5,
+      text: "يعطيك الصحة منتج رائع أظافري تحسنت برشا بعد ما جربت عدة كريمات بدون فائدة.",
+    },
+    {
+      name: "ناجح",
+      city: "بنزرت",
+      rating: 5,
+      text: "توصيل سريع وخدمة ممتازة، المنتج فعال 100%.",
+    },
+  ],
+  faq: commonFaq,
+  contentBlocks: [
+    {
+      type: "image",
+      image: dihenKebrit1,
+      title: "مرهم كبريت طبيعي 100%",
+      text: "حماية ووقاية كاملة ضد الفطريات والتسلخات.",
+    },
+    {
+      type: "image",
+      image: dihenKebrit2,
+      title: "قوة الكبريت والأعشاب",
+      text: "تركيبة مطهرة ومغذية للبشرة والأظافر.",
+    },
+  ],
+};
 
+export const products: Product[] = [mainProduct, dihenKebritProduct];
 
 export const categories = [
-  { id: "all", label: "Tous", emoji: "✨" },
-  { id: "Soins du corps", label: "Soins du corps", emoji: "🌿" },
-  { id: "Soins des cheveux", label: "Cheveux", emoji: "💆" },
-  { id: "Soins des pieds", label: "Pieds", emoji: "🦶" },
-  { id: "Huiles naturelles", label: "Huiles", emoji: "🫒" },
-  { id: "Beauté & bien-être", label: "Beauté", emoji: "✨" },
+  { id: "all", label: "جميع المنتجات", emoji: "✨" },
+  { id: "Soins des pieds & corps", label: "فازلين الحبة السوداء", emoji: "🌿" },
+  { id: "Soins de la peau", label: "دهن كبريت طبيعي", emoji: "🟡" },
 ];
 
 export const homeReviews: Review[] = [
-  {
-    name: "Amel",
-    city: "Tunis",
-    rating: 5,
-    text: "J'ai beaucoup aimé le produit, mes pieds sont beaucoup plus doux.",
-  },
-  {
-    name: "Sonia",
-    city: "Sousse",
-    rating: 5,
-    text: "Des produits naturels, une livraison rapide. Merci Aura Bio !",
-  },
-  {
-    name: "Mohamed",
-    city: "Sfax",
-    rating: 5,
-    text: "Bon rapport qualité prix, je vais recommander.",
-  },
-  {
-    name: "Rania",
-    city: "Ariana",
-    rating: 5,
-    text: "Le service client est très gentil, ils m'ont appelée pour confirmer.",
-  },
+  ...mainProduct.reviews,
+  ...dihenKebritProduct.reviews,
 ];

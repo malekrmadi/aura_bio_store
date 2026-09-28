@@ -34,9 +34,9 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
         <Link
           to={`/produits/${product.slug}`}
-          className="btn-base btn-primary mt-3 w-full"
+          className="btn-base btn-primary mt-3 w-full font-bold py-3 text-base shadow-sm"
         >
-          Voir le produit
+          اطلب الآن — Commander ({product.price} DT)
         </Link>
       </div>
     </article>
