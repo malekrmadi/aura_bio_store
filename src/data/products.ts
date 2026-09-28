@@ -1,6 +1,4 @@
-import vaselinePhoto1 from "@/assets/vaseline photo 1.jfif";
-import vaselinePhoto2 from "@/assets/vaseline photo 2.jfif";
-import vaselinePhoto3 from "@/assets/vaseline photo 3.jfif";
+import vaselineReal from "@/assets/vaseline-real.jpg";
 import dihenKebritReal from "@/assets/dihen-kebrit-real.jpg";
 import affiche1 from "@/assets/affiche1.jfif";
 import affiche2 from "@/assets/affiche 2.jfif";
@@ -75,7 +73,7 @@ export const mainProduct: Product = {
   shortDescription: "فازلين + زيت الحبة السوداء + شمع العسل",
   description:
     "عناية فائقة وطبيعية لتنعيم وترطيب المناطق الجافة والمشققة: الكعبين، المرفقين، الركبتين واليدين. تركيبة غنية تمتص بسرعة وتمنحك نعومة ورطوبة تدوم طوال اليوم.",
-  images: [vaselinePhoto1, vaselinePhoto2, vaselinePhoto3],
+  images: [vaselineReal],
   oldPrice: 35,
   price: 29,
   badge: "الأكثر مبيعاً 🔥 BEST SELLER",
