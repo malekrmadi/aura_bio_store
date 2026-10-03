@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { CheckCircle2, MessageCircle, PhoneCall } from "lucide-react";
 import type { Order } from "@/services/orderService";
 import { SHOP_WHATSAPP } from "@/data/governorates";
+import { trackPurchase } from "@/lib/metaPixel";
 
 export function ConfirmationPage() {
   const [order, setOrder] = useState<Order | null>(null);
@@ -10,7 +11,17 @@ export function ConfirmationPage() {
   useEffect(() => {
     try {
       const raw = window.sessionStorage.getItem("aura-bio-last-order");
-      if (raw) setOrder(JSON.parse(raw) as Order);
+      if (raw) {
+        const parsedOrder = JSON.parse(raw) as Order;
+        setOrder(parsedOrder);
+
+        // Track Purchase event safely on Confirmation Page with deduplication protection
+        const trackedKey = `aura-bio-tracked-${parsedOrder.orderId}`;
+        if (typeof window !== "undefined" && !window.sessionStorage.getItem(trackedKey)) {
+          trackPurchase(parsedOrder);
+          window.sessionStorage.setItem(trackedKey, "true");
+        }
+      }
     } catch {
       /* ignore */
     }
