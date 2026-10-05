@@ -1,6 +1,14 @@
 import { useState } from "react";
 
-export function ProductGallery({ images, name }: { images: string[]; name: string }) {
+export function ProductGallery({
+  images,
+  name,
+  fullImage = false,
+}: {
+  images: string[];
+  name: string;
+  fullImage?: boolean | undefined;
+}) {
   const [active, setActive] = useState(0);
   return (
     <div>
@@ -8,7 +16,11 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
         <img
           src={images[active]}
           alt={`${name} — photo ${active + 1}`}
-          className="aspect-square w-full object-cover transition-transform duration-300 hover:scale-105"
+          className={
+            fullImage
+              ? "h-auto w-full"
+              : "aspect-square w-full object-cover transition-transform duration-300 hover:scale-105"
+          }
         />
       </div>
       {images.length > 1 && (

@@ -144,7 +144,7 @@ export function ProductDetailPage() {
     <div className="pb-12">
       <div className="container-page py-6">
         <div className="grid gap-8 lg:grid-cols-2 items-start">
-          <ProductGallery images={product.images} name={product.name} />
+          <ProductGallery images={product.images} name={product.name} fullImage={product.fullImage} />
 
           <div>
             <div className="flex flex-wrap gap-2 items-center">

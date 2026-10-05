@@ -1,6 +1,7 @@
 import vaselineReal from "@/assets/vaseline-real.jpg";
 import dihenKebritReal from "@/assets/dihen-kebrit-real.jpg";
 import packDuoReal from "@/assets/pack-duo-real.jpg";
+import packCheveuxNatural from "@/assets/static-C-Natural-4x5.jpg";
 import affiche1 from "@/assets/affiche1.jfif";
 import affiche2 from "@/assets/affiche 2.jfif";
 import affiche3 from "@/assets/affiche 3.jfif";
@@ -45,6 +46,8 @@ export type Product = {
   reviews: Review[];
   faq: { question: string; answer: string }[];
   contentBlocks: ContentBlock[];
+  /** Affiche l'image principale en entier (sans recadrage) */
+  fullImage?: boolean | undefined;
 };
 
 const commonFaq = [
@@ -263,18 +266,100 @@ export const packDuoProduct: Product = {
   ],
 };
 
-export const products: Product[] = [mainProduct, dihenKebritProduct, packDuoProduct];
+export const packCheveuxProduct: Product = {
+  id: "pack-cheveux-004",
+  slug: "pack-cheveux-sidr-romarin",
+  name: "باك العناية الطبيعية بجذور الشعر (5 قطع)",
+  category: "Soins des cheveux",
+  shortDescription: "سدر بيو + زيت إكليل الجبل + ديرما رولر 540 + مشط الجذور + فرشة التدليك — 5 قطع بـ 49 د.ت فقط",
+  description:
+    "من الطبيعة لجذور شعرك! باك متكامل من 5 قطع لتقوية الشعر من الجذور وتحفيز نموه بطريقة طبيعية 100% بلا كيمياء. يجمع بين مسحوق السدر البيو لتنظيف وتغذية الشعر، زيت إكليل الجبل المعروف بتحفيز نمو الشعر ومقاومة التساقط، ديرما رولر 540 إبرة لتنشيط الدورة الدموية في فروة الرأس وتحسين امتصاص الزيت، مشط الجذور لتوزيع الزيت مباشرة على الفروة، وفرشة التدليك السيليكونية لتدليك مريح وتنظيف عميق. كل هذا بـ 49 د.ت فقط بدلاً من 110 د.ت.",
+  images: [packCheveuxNatural],
+  fullImage: true,
+  oldPrice: 110,
+  price: 49,
+  badge: "عرض استثنائي 🔥 5 قطع بـ 49 د.ت",
+  inStock: true,
+  ingredients: [
+    "سدر بيو (Poudre de Sidr Royal)",
+    "زيت إكليل الجبل (Huile de Romarin)",
+    "ديرما رولر 540 إبرة (Derma Roller 540)",
+    "مشط الجذور لتوزيع الزيت (Peigne applicateur)",
+    "فرشة تدليك فروة الرأس (Brosse de massage)",
+  ],
+  benefits: [
+    "تقوية الشعر من الجذور والحد من التساقط",
+    "تحفيز نمو الشعر وزيادة كثافته بزيت إكليل الجبل",
+    "تنشيط الدورة الدموية في فروة الرأس بالديرما رولر والتدليك",
+    "تنظيف وتغذية الشعر بالسدر الطبيعي ومنحه لمعاناً ونعومة",
+    "مكونات طبيعية 100% بلا كيمياء",
+    "توفير كبير : 49 د.ت فقط بدلاً من 110 د.ت (توفير 61 د.ت)",
+  ],
+  usage: [
+    "مرر الديرما رولر بلطف على فروة الرأس النظيفة (1 إلى 2 مرات في الأسبوع)",
+    "ضع زيت إكليل الجبل في مشط الجذور ووزعه مباشرة على فروة الرأس",
+    "دلك فروة الرأس بفرشة التدليك لمدة 3 إلى 5 دقائق لتحسين امتصاص الزيت",
+    "اترك الزيت ساعة على الأقل أو طوال الليل",
+    "اخلط السدر بالماء الدافئ حتى يصبح عجينة، ضعه على الشعر 20 دقيقة ثم اشطفه جيداً",
+  ],
+  offers: [
+    { quantity: 1, price: 49, label: "باك الشعر الطبيعي (5 قطع)" },
+  ],
+  reviews: [
+    {
+      name: "إيمان",
+      city: "تونس",
+      rating: 5,
+      text: "الباك كامل ومتكامل، زيت إكليل الجبل مع الديرما رولر نقصلي التساقط برشا. ينصح بيه!",
+    },
+    {
+      name: "رحمة",
+      city: "سوسة",
+      rating: 5,
+      text: "السدر بيو ريحتو طبيعية وشعري ولى ناعم ويلمع. والسوم ما يتعداش.",
+    },
+    {
+      name: "يوسف",
+      city: "المهدية",
+      rating: 5,
+      text: "خذيتو لمرتي، 5 قطع بـ 49 دينار عرض ممتاز ووصل في يومين.",
+    },
+  ],
+  faq: [
+    {
+      question: "كيفية استعمال الباك ؟",
+      answer: "ديرما رولر ثم زيت إكليل الجبل بمشط الجذور، تدليك بالفرشة، واترك الزيت ساعة أو طوال الليل. استعمل السدر كقناع قبل غسل الشعر.",
+    },
+    {
+      question: "متى تظهر النتائج ؟",
+      answer: "مع الاستعمال المنتظم تبدأ النتائج بالظهور (نقص التساقط ونعومة الشعر) خلال 3 إلى 4 أسابيع.",
+    },
+    ...commonFaq.slice(2),
+  ],
+  contentBlocks: [
+    {
+      type: "image",
+      image: packCheveuxNatural,
+      title: "من الطبيعة لجذور شعرك",
+      text: "سدر بيو + زيت إكليل الجبل • بلا كيمياء.",
+    },
+  ],
+};
+
+export const products: Product[] = [mainProduct, dihenKebritProduct, packDuoProduct, packCheveuxProduct];
 
 export const categories = [
   { id: "all", label: "جميع المنتجات", emoji: "✨" },
   { id: "Soins des pieds & corps", label: "فازلين الحبة السوداء", emoji: "🌿" },
   { id: "Soins de la peau", label: "دهان كبريت طبيعي", emoji: "🟡" },
   { id: "Packs Économiques", label: "باك التوفير (Pack Duo)", emoji: "🎁" },
+  { id: "Soins des cheveux", label: "باك الشعر الطبيعي", emoji: "💆" },
 ];
 
 export const homeReviews: Review[] = [
   ...mainProduct.reviews,
   ...dihenKebritProduct.reviews,
   ...packDuoProduct.reviews,
+  ...packCheveuxProduct.reviews,
 ];
 
