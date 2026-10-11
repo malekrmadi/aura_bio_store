@@ -15,7 +15,7 @@ import {
   type Customer,
   type OrderItem,
 } from "@/services/orderService";
-import { trackAddToCart, trackInitiateCheckout, trackPurchase, trackViewContent } from "@/lib/metaPixel";
+import { trackInitiateCheckout, trackViewContent } from "@/lib/metaPixel";
 
 const emptyCustomer: Customer = {
   name: "",
@@ -36,7 +36,6 @@ export function ProductDetailPage() {
   const [customer, setCustomer] = useState<Customer>(emptyCustomer);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
-  const [hasInitiatedCheckout, setHasInitiatedCheckout] = useState(false);
   const deliveryFee = getDeliveryFee();
 
   const product = (slug ? getProductBySlug(slug) : null) ?? mainProduct;
@@ -72,19 +71,14 @@ export function ProductDetailPage() {
     [product, quantity, unitPrice, total, offer.label],
   );
 
+  // InitiateCheckout : dédoublonné par produit dans metaPixel.ts (une seule fois par session)
   const scrollToForm = () => {
-    if (!hasInitiatedCheckout) {
-      trackInitiateCheckout([item], finalGrandTotal);
-      setHasInitiatedCheckout(true);
-    }
+    trackInitiateCheckout([item], finalGrandTotal);
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const handleFormInteraction = () => {
-    if (!hasInitiatedCheckout) {
-      trackInitiateCheckout([item], finalGrandTotal);
-      setHasInitiatedCheckout(true);
-    }
+    trackInitiateCheckout([item], finalGrandTotal);
   };
 
   const validate = () => {
@@ -119,9 +113,6 @@ export function ProductDetailPage() {
       },
       [item],
     );
-
-    // Événement Meta Pixel Purchase
-    trackPurchase(order);
 
     // Envoi vers le Webhook Google Sheets
     const res = await submitOrder(order);

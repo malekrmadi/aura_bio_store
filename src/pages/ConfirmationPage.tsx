@@ -15,12 +15,8 @@ export function ConfirmationPage() {
         const parsedOrder = JSON.parse(raw) as Order;
         setOrder(parsedOrder);
 
-        // Track Purchase event safely on Confirmation Page with deduplication protection
-        const trackedKey = `aura-bio-tracked-${parsedOrder.orderId}`;
-        if (typeof window !== "undefined" && !window.sessionStorage.getItem(trackedKey)) {
-          trackPurchase(parsedOrder);
-          window.sessionStorage.setItem(trackedKey, "true");
-        }
+        // Seul point d'envoi du Purchase (dédoublonné par orderId dans metaPixel.ts)
+        trackPurchase(parsedOrder);
       }
     } catch {
       /* ignore */

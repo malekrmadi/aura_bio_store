@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { getDeliveryFee } from "@/services/orderService";
-import { trackInitiateCheckout } from "@/lib/metaPixel";
 
 export function CartPage() {
   const { items, subtotal, updateQuantity, removeItem } = useCart();
@@ -10,7 +9,7 @@ export function CartPage() {
   const navigate = useNavigate();
 
   const handleProceedToCheckout = () => {
-    trackInitiateCheckout(items, subtotal + deliveryFee);
+    // InitiateCheckout est envoyé à l'arrivée sur /commande (CheckoutPage)
     navigate("/commande");
   };
 

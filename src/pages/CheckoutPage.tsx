@@ -11,7 +11,7 @@ import {
   type Customer,
   type OrderItem,
 } from "@/services/orderService";
-import { trackInitiateCheckout, trackPurchase } from "@/lib/metaPixel";
+import { trackInitiateCheckout } from "@/lib/metaPixel";
 
 const emptyCustomer: Customer = {
   name: "",
@@ -84,9 +84,6 @@ export function CheckoutPage() {
     const res = await submitOrder(order);
     setSending(false);
     if (!res.success) return;
-
-    // Déclenchement de l'événement Meta Pixel Purchase
-    trackPurchase(res.order);
 
     if (direct) clearBuyNowItem();
     else cart.clear();

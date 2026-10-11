@@ -3,7 +3,10 @@ import type { Product } from "@/data/products";
 
 declare global {
   interface Window {
-    fbq?: (...args: unknown[]) => void;
+    fbq?: ((...args: unknown[]) => void) & {
+      disablePushState?: boolean;
+      allowDuplicatePageViews?: boolean;
+    };
     _fbq?: unknown;
   }
 }
@@ -13,9 +16,24 @@ declare global {
  * Peut être défini via la variable d'environnement VITE_META_PIXEL_ID dans votre fichier .env.
  */
 export const META_PIXEL_ID =
-  (import.meta.env["VITE_META_PIXEL_ID"] as string | undefined) || "1456210659684934";
+  (import.meta.env["VITE_META_PIXEL_ID"] as string | undefined) || "1471739124847033";
 
 let isInitialized = false;
+
+/**
+ * Retourne true si l'événement identifié par `key` a déjà été envoyé dans cette session (onglet).
+ * Sinon le marque comme envoyé. Empêche les doublons (rechargement de page, double rendu, double clic).
+ */
+function alreadyTracked(key: string): boolean {
+  try {
+    const storageKey = `aura-bio-tracked-${key}`;
+    if (window.sessionStorage.getItem(storageKey)) return true;
+    window.sessionStorage.setItem(storageKey, "true");
+    return false;
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Extrait le paramètre test_event_code de l'URL s'il est présent (pour le test direct dans Meta Events Manager).
@@ -68,6 +86,14 @@ export function initMetaPixel(): void {
     "https://connect.facebook.net/en_US/fbevents.js",
   );
   /* eslint-enable */
+
+  // Les PageView sont envoyés manuellement à chaque changement de route (voir App.tsx) :
+  // on désactive l'envoi automatique du Pixel sur pushState pour éviter les doublons,
+  // et on autorise les PageView répétés (sinon le Pixel ignore ceux qui suivent le premier).
+  if (window.fbq) {
+    window.fbq.disablePushState = true;
+    window.fbq.allowDuplicatePageViews = true;
+  }
 
   if (META_PIXEL_ID) {
     window.fbq?.("init", META_PIXEL_ID);
@@ -153,6 +179,7 @@ export function trackAddToCart(item: OrderItem): void {
  */
 export function trackInitiateCheckout(items: OrderItem[], total: number, customEventId?: string): void {
   const eventID = customEventId || `init-checkout-${items.map((i) => i.productId).join("-")}`;
+  if (typeof window === "undefined" || alreadyTracked(eventID)) return;
   trackEvent(
     "InitiateCheckout",
     {
@@ -168,8 +195,10 @@ export function trackInitiateCheckout(items: OrderItem[], total: number, customE
 
 /**
  * Événement : Purchase (lorsque la commande est validée avec succès)
+ * Envoyé une seule fois par commande, depuis la page de confirmation.
  */
 export function trackPurchase(order: Order): void {
+  if (typeof window === "undefined" || alreadyTracked(order.orderId)) return;
   // Transmet le orderId à la fois dans les données et dans le 4ème paramètre options { eventID: order.orderId } pour le dédoublonnement Meta strict
   trackEvent(
     "Purchase",
