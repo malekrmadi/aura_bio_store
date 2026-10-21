@@ -1,7 +1,7 @@
 import vaselineReal from "@/assets/vaseline-real.jpg";
 import dihenKebritReal from "@/assets/dihen-kebrit-real.jpg";
 import packDuoReal from "@/assets/pack-duo-real.jpg";
-import packCheveuxNatural from "@/assets/static-C-Natural-4x5.jpg";
+import packCheveuxNatural from "@/assets/pack-cheveux-affiche.jpg";
 import affiche1 from "@/assets/affiche1.jfif";
 import affiche2 from "@/assets/affiche 2.jfif";
 import affiche3 from "@/assets/affiche 3.jfif";

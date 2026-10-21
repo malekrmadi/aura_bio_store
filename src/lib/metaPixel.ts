@@ -20,11 +20,16 @@ export const META_PIXEL_ID =
 
 let isInitialized = false;
 
+// Secours en mémoire si sessionStorage est bloqué (navigation privée, etc.)
+const trackedInMemory = new Set<string>();
+
 /**
  * Retourne true si l'événement identifié par `key` a déjà été envoyé dans cette session (onglet).
  * Sinon le marque comme envoyé. Empêche les doublons (rechargement de page, double rendu, double clic).
  */
 function alreadyTracked(key: string): boolean {
+  if (trackedInMemory.has(key)) return true;
+  trackedInMemory.add(key);
   try {
     const storageKey = `aura-bio-tracked-${key}`;
     if (window.sessionStorage.getItem(storageKey)) return true;
@@ -178,8 +183,11 @@ export function trackAddToCart(item: OrderItem): void {
  * Événement : InitiateCheckout (lors de l'accès à la caisse ou clic Commander maintenant)
  */
 export function trackInitiateCheckout(items: OrderItem[], total: number, customEventId?: string): void {
-  const eventID = customEventId || `init-checkout-${items.map((i) => i.productId).join("-")}`;
-  if (typeof window === "undefined" || alreadyTracked(eventID)) return;
+  // dedupKey : anti-doublon local (une fois par session et par produit)
+  // eventID : unique à chaque envoi, pour que Meta ne fusionne pas les InitiateCheckout de visiteurs différents
+  const dedupKey = customEventId || `init-checkout-${items.map((i) => i.productId).join("-")}`;
+  if (typeof window === "undefined" || alreadyTracked(dedupKey)) return;
+  const eventID = `${dedupKey}-${Date.now()}`;
   trackEvent(
     "InitiateCheckout",
     {

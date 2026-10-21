@@ -98,6 +98,8 @@ export function ProductDetailPage() {
 
   const handleSubmitOrder = async (ev: React.FormEvent) => {
     ev.preventDefault();
+    // Filet de sécurité : garantit l'InitiateCheckout avant tout Purchase (aucun doublon grâce au dédoublonnage)
+    trackInitiateCheckout([item], finalGrandTotal);
     if (!validate()) return;
     setSending(true);
 
