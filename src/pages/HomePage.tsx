@@ -22,10 +22,10 @@ export function HomePage() {
   const featured = getFeaturedProducts(4);
   const categories = getCategories().filter((c) => c.id !== "all");
   const reviews = getHomeReviews();
-  // Packs cheveux pas déjà affichés dans les produits vedettes
-  const hairPacks = getProductsByCategory("Soins des cheveux").filter(
-    (p) => !featured.some((f) => f.id === p.id),
-  );
+  // Packs cheveux mis en avant (le pack de 5 en premier)
+  const hairPacks = getProductsByCategory("Soins des cheveux");
+  // Autres soins (hors cheveux)
+  const otherProducts = featured.filter((p) => p.category !== "Soins des cheveux");
 
   return (
     <>
@@ -78,27 +78,12 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* PRODUIT STAR */}
-      <section className="container-page py-6">
-        <SectionTitle title="Notre produit star" subtitle="Choisissez votre offre, commandez, on vous livre." />
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 justify-center max-w-4xl mx-auto">
-          {featured.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-        <div className="mt-8 text-center">
-          <Link to="/produits" className="btn-base btn-outline">
-            Voir le produit
-          </Link>
-        </div>
-      </section>
-
       {/* PACKS CHEVEUX */}
       {hairPacks.length > 0 && (
         <section className="container-page py-10">
           <SectionTitle
             title="Nos packs cheveux 💆"
-            subtitle="Composez votre routine : packs de 2, 3 ou 4 produits naturels."
+            subtitle="Le soin naturel de vos cheveux : packs de 2, 3, 4 ou 5 produits."
           />
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
             {hairPacks.map((p) => (
@@ -115,6 +100,21 @@ export function HomePage() {
           </div>
         </section>
       )}
+
+      {/* AUTRES SOINS */}
+      <section className="container-page py-6">
+        <SectionTitle title="Nos soins corps & peau" subtitle="Choisissez votre offre, commandez, on vous livre." />
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 justify-center max-w-4xl mx-auto">
+          {otherProducts.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+        <div className="mt-8 text-center">
+          <Link to="/produits" className="btn-base btn-outline">
+            Voir tous les produits
+          </Link>
+        </div>
+      </section>
 
       {/* POURQUOI */}
       <section className="bg-secondary/50 py-12">
