@@ -4,7 +4,12 @@ import cover from "@/assets/cover aura bio.jpg";
 import { ProductCard } from "@/components/ProductCard";
 import { SectionTitle } from "@/components/Price";
 import { ReviewCarousel } from "@/components/ReviewCarousel";
-import { getCategories, getFeaturedProducts, getHomeReviews } from "@/services/productService";
+import {
+  getCategories,
+  getFeaturedProducts,
+  getHomeReviews,
+  getProductsByCategory,
+} from "@/services/productService";
 
 const reasons = [
   { icon: Leaf, title: "Ingrédients naturels", text: "Des formules simples et douces." },
@@ -17,6 +22,10 @@ export function HomePage() {
   const featured = getFeaturedProducts(4);
   const categories = getCategories().filter((c) => c.id !== "all");
   const reviews = getHomeReviews();
+  // Packs cheveux pas déjà affichés dans les produits vedettes
+  const hairPacks = getProductsByCategory("Soins des cheveux").filter(
+    (p) => !featured.some((f) => f.id === p.id),
+  );
 
   return (
     <>
@@ -83,6 +92,29 @@ export function HomePage() {
           </Link>
         </div>
       </section>
+
+      {/* PACKS CHEVEUX */}
+      {hairPacks.length > 0 && (
+        <section className="container-page py-10">
+          <SectionTitle
+            title="Nos packs cheveux 💆"
+            subtitle="Composez votre routine : packs de 2, 3 ou 4 produits naturels."
+          />
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
+            {hairPacks.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link
+              to={`/produits?categorie=${encodeURIComponent("Soins des cheveux")}`}
+              className="btn-base btn-outline"
+            >
+              Voir tous les packs cheveux
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* POURQUOI */}
       <section className="bg-secondary/50 py-12">
