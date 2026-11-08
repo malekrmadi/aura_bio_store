@@ -51,6 +51,12 @@ export function ConfirmationPage() {
               <dt className="text-muted-foreground font-medium">الهاتف (Téléphone)</dt>
               <dd className="font-semibold">{order.customer.phone}</dd>
             </div>
+            {order.customer.phone2 && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground font-medium">هاتف ثاني (2ème numéro)</dt>
+                <dd className="font-semibold">{order.customer.phone2}</dd>
+              </div>
+            )}
             <div className="flex justify-between">
               <dt className="text-muted-foreground font-medium">الولاية (Gouvernorat)</dt>
               <dd className="font-semibold">{order.customer.governorate}</dd>

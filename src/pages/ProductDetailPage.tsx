@@ -20,6 +20,7 @@ import { trackInitiateCheckout, trackViewContent } from "@/lib/metaPixel";
 const emptyCustomer: Customer = {
   name: "",
   phone: "",
+  phone2: "",
   governorate: "",
   city: "",
   address: "",
@@ -30,6 +31,8 @@ export function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const formRef = useRef<HTMLDivElement>(null);
+  // Empêche un double envoi (double appui rapide sur le bouton)
+  const submittingRef = useRef(false);
 
   const [offerIndex, setOfferIndex] = useState(0);
   const [extra, setExtra] = useState(1);
@@ -67,6 +70,7 @@ export function ProductDetailPage() {
       unitPrice,
       lineTotal: total,
       offerLabel: `${offer.label} — ${total} DT`,
+      contents: product.contents,
     }),
     [product, quantity, unitPrice, total, offer.label],
   );
@@ -88,10 +92,15 @@ export function ProductDetailPage() {
     const digitsOnly = customer.phone.replace(/\D/g, "");
     if (digitsOnly.length !== 8)
       e['phone'] = "يرجى كتابة 8 أرقام • Numéro invalide (8 chiffres).";
+    const phone2Digits = (customer.phone2 ?? "").replace(/\D/g, "");
+    if (phone2Digits.length > 0 && phone2Digits.length !== 8)
+      e['phone2'] = "يرجى كتابة 8 أرقام • Numéro invalide (8 chiffres).";
     if (!customer.governorate)
       e['governorate'] = "يرجى اختيار الولاية • Choisissez votre gouvernorat.";
+    if (customer.city.trim().length === 0)
+      e['city'] = "يرجى كتابة المدينة • Indiquez votre ville.";
     if (customer.address.trim().length === 0)
-      e['address'] = "يرجى كتابة العنوان والمدينة • Indiquez votre adresse.";
+      e['address'] = "يرجى كتابة العنوان • Indiquez votre adresse.";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -100,7 +109,8 @@ export function ProductDetailPage() {
     ev.preventDefault();
     // Filet de sécurité : garantit l'InitiateCheckout avant tout Purchase (aucun doublon grâce au dédoublonnage)
     trackInitiateCheckout([item], finalGrandTotal);
-    if (!validate()) return;
+    if (!validate() || submittingRef.current) return;
+    submittingRef.current = true;
     setSending(true);
 
     const order = buildOrder(
@@ -108,6 +118,7 @@ export function ProductDetailPage() {
         ...customer,
         name: customer.name.trim().slice(0, 100),
         phone: customer.phone.trim().slice(0, 20),
+        phone2: (customer.phone2 ?? "").trim().slice(0, 20),
         governorate: customer.governorate,
         city: customer.city.trim() || customer.governorate,
         address: customer.address.trim().slice(0, 300),
@@ -119,6 +130,7 @@ export function ProductDetailPage() {
     // Envoi vers le Webhook Google Sheets
     const res = await submitOrder(order);
     setSending(false);
+    submittingRef.current = false;
 
     if (res.success) {
       try {
@@ -225,7 +237,6 @@ export function ProductDetailPage() {
                   <input
                     id="name"
                     className={fieldClass}
-                    placeholder="Nom et prénom"
                     maxLength={100}
                     value={customer.name}
                     onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
@@ -242,12 +253,27 @@ export function ProductDetailPage() {
                     type="tel"
                     inputMode="tel"
                     className={fieldClass}
-                    placeholder="22 123 456"
                     maxLength={20}
                     value={customer.phone}
                     onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
                   />
                   {errors['phone'] && <p className="mt-1 text-xs font-semibold text-destructive">{errors['phone']}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="phone2" className="text-sm font-bold text-foreground block">
+                    رقم هاتف ثاني <span className="font-normal text-muted-foreground text-xs">(2ème numéro - facultatif)</span>
+                  </label>
+                  <input
+                    id="phone2"
+                    type="tel"
+                    inputMode="tel"
+                    className={fieldClass}
+                    maxLength={20}
+                    value={customer.phone2 ?? ""}
+                    onChange={(e) => setCustomer({ ...customer, phone2: e.target.value })}
+                  />
+                  {errors['phone2'] && <p className="mt-1 text-xs font-semibold text-destructive">{errors['phone2']}</p>}
                 </div>
 
                 <div>
@@ -258,7 +284,7 @@ export function ProductDetailPage() {
                     id="gov"
                     className={fieldClass}
                     value={customer.governorate}
-                    onChange={(e) => setCustomer({ ...customer, governorate: e.target.value, city: customer.city || e.target.value })}
+                    onChange={(e) => setCustomer({ ...customer, governorate: e.target.value })}
                   >
                     <option value="">اختر الولاية... (Choisir votre gouvernorat)</option>
                     {governorateList.map((g) => (
@@ -271,18 +297,44 @@ export function ProductDetailPage() {
                 </div>
 
                 <div>
+                  <label htmlFor="city" className="text-sm font-bold text-foreground block">
+                    المدينة / المعتمدية * <span className="font-normal text-muted-foreground text-xs">(Ville / Délégation)</span>
+                  </label>
+                  <input
+                    id="city"
+                    className={fieldClass}
+                    maxLength={100}
+                    value={customer.city}
+                    onChange={(e) => setCustomer({ ...customer, city: e.target.value })}
+                  />
+                  {errors['city'] && <p className="mt-1 text-xs font-semibold text-destructive">{errors['city']}</p>}
+                </div>
+
+                <div>
                   <label htmlFor="address" className="text-sm font-bold text-foreground block">
-                    العنوان والمدينة * <span className="font-normal text-muted-foreground text-xs">(Adresse et Ville)</span>
+                    العنوان بالتفصيل * <span className="font-normal text-muted-foreground text-xs">(Adresse : rue, quartier, n°...)</span>
                   </label>
                   <input
                     id="address"
                     className={fieldClass}
-                    placeholder="Adresse complète"
                     maxLength={300}
                     value={customer.address}
-                    onChange={(e) => setCustomer({ ...customer, address: e.target.value, city: e.target.value })}
+                    onChange={(e) => setCustomer({ ...customer, address: e.target.value })}
                   />
                   {errors['address'] && <p className="mt-1 text-xs font-semibold text-destructive">{errors['address']}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="note" className="text-sm font-bold text-foreground block">
+                    ملاحظة <span className="font-normal text-muted-foreground text-xs">(Remarque - facultatif)</span>
+                  </label>
+                  <input
+                    id="note"
+                    className={fieldClass}
+                    maxLength={300}
+                    value={customer.note ?? ""}
+                    onChange={(e) => setCustomer({ ...customer, note: e.target.value })}
+                  />
                 </div>
 
                 <div className="rounded-xl bg-emerald-950/5 dark:bg-emerald-950/30 p-3.5 text-xs font-medium space-y-2 border border-emerald-600/20 mt-1">

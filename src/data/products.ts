@@ -2,6 +2,11 @@ import vaselineReal from "@/assets/vaseline-real.jpg";
 import dihenKebritReal from "@/assets/dihen-kebrit-real.jpg";
 import packDuoReal from "@/assets/pack-duo-real.jpg";
 import packCheveuxNatural from "@/assets/pack-cheveux-affiche.jpg";
+import packCheveux4Img from "@/assets/pack-cheveux-pack-4-pieces.jpg";
+import packTrioPousseImg from "@/assets/pack-cheveux-trio-pousse.jpg";
+import packTrioNaturelImg from "@/assets/pack-cheveux-trio-soin-naturel.jpg";
+import packDuoAntiChuteImg from "@/assets/pack-cheveux-duo-anti-chute.jpg";
+import packDuoSidrBrosseImg from "@/assets/pack-cheveux-duo-sidr-brosse.jpg";
 import affiche1 from "@/assets/affiche1.jfif";
 import affiche2 from "@/assets/affiche 2.jfif";
 import affiche3 from "@/assets/affiche 3.jfif";
@@ -48,6 +53,8 @@ export type Product = {
   contentBlocks: ContentBlock[];
   /** Affiche l'image principale en entier (sans recadrage) */
   fullImage?: boolean | undefined;
+  /** Contenu d'un pack, envoyé avec la commande pour la préparation */
+  contents?: string | undefined;
 };
 
 const commonFaq = [
@@ -276,6 +283,7 @@ export const packCheveuxProduct: Product = {
     "من الطبيعة لجذور شعرك! باك متكامل من 5 قطع لتقوية الشعر من الجذور وتحفيز نموه بطريقة طبيعية 100% بلا كيمياء. يجمع بين مسحوق السدر البيو لتنظيف وتغذية الشعر، زيت إكليل الجبل المعروف بتحفيز نمو الشعر ومقاومة التساقط، ديرما رولر 540 إبرة لتنشيط الدورة الدموية في فروة الرأس وتحسين امتصاص الزيت، مشط الجذور لتوزيع الزيت مباشرة على الفروة، وفرشة التدليك السيليكونية لتدليك مريح وتنظيف عميق. كل هذا بـ 49 د.ت فقط بدلاً من 110 د.ت.",
   images: [packCheveuxNatural],
   fullImage: true,
+  contents: "سدر بيو + زيت إكليل الجبل + ديرما رولر 540 + مشط الجذور + فرشة التدليك",
   oldPrice: 110,
   price: 49,
   badge: "عرض استثنائي 🔥 5 قطع بـ 49 د.ت",
@@ -346,14 +354,224 @@ export const packCheveuxProduct: Product = {
   ],
 };
 
-export const products: Product[] = [mainProduct, dihenKebritProduct, packDuoProduct, packCheveuxProduct];
+/* ------------------------------------------------------------------
+ * Combinaisons dérivées du Pack Cheveux (5 pièces).
+ * Produits de base : huile de romarin, sidr, derma roller, brosse de massage.
+ * ------------------------------------------------------------------ */
+const hairItems = {
+  oil: "زيت إكليل الجبل (Huile de Romarin)",
+  sidr: "سدر بيو (Poudre de Sidr Royal)",
+  roller: "ديرما رولر 540 إبرة (Derma Roller 540)",
+  brush: "فرشة تدليك فروة الرأس (Brosse de massage)",
+};
+
+const hairUsage = {
+  roller: "مرر الديرما رولر بلطف على فروة الرأس النظيفة (1 إلى 2 مرات في الأسبوع)",
+  oil: "ضع بضع قطرات من زيت إكليل الجبل على فروة الرأس واتركه ساعة على الأقل أو طوال الليل",
+  brush: "دلك فروة الرأس بفرشة التدليك لمدة 3 إلى 5 دقائق",
+  sidr: "اخلط السدر بالماء الدافئ حتى يصبح عجينة، ضعه على الشعر 20 دقيقة ثم اشطفه جيداً",
+};
+
+type HairKey = keyof typeof hairItems;
+
+/** Noms courts envoyés dans la commande (libellé de l'offre) */
+const hairShortNames: Record<HairKey, string> = {
+  oil: "زيت إكليل الجبل",
+  sidr: "سدر بيو",
+  roller: "ديرما رولر 540",
+  brush: "فرشة التدليك",
+};
+
+function makeHairPack(opts: {
+  id: string;
+  slug: string;
+  name: string;
+  offerLabel: string;
+  image: string;
+  items: HairKey[];
+  price: number;
+  oldPrice: number;
+  badge: string;
+  shortDescription: string;
+  description: string;
+  benefits: string[];
+  reviews: Review[];
+}): Product {
+  return {
+    id: opts.id,
+    slug: opts.slug,
+    name: opts.name,
+    category: "Soins des cheveux",
+    shortDescription: opts.shortDescription,
+    description: opts.description,
+    images: [opts.image],
+    fullImage: true,
+    contents: opts.items.map((k) => hairShortNames[k]).join(" + "),
+    oldPrice: opts.oldPrice,
+    price: opts.price,
+    badge: opts.badge,
+    inStock: true,
+    ingredients: opts.items.map((k) => hairItems[k]),
+    benefits: [
+      ...opts.benefits,
+      `توفير : ${opts.price} د.ت فقط بدلاً من ${opts.oldPrice} د.ت (توفير ${opts.oldPrice - opts.price} د.ت)`,
+    ],
+    // Ordre logique d'utilisation : roller → huile → brosse → sidr
+    usage: (["roller", "oil", "brush", "sidr"] as HairKey[])
+      .filter((k) => opts.items.includes(k))
+      .map((k) => hairUsage[k]),
+    // Le contenu du pack est inclus dans le libellé pour apparaître dans la commande
+    offers: [
+      {
+        quantity: 1,
+        price: opts.price,
+        label: `${opts.offerLabel} : ${opts.items.map((k) => hairShortNames[k]).join(" + ")}`,
+      },
+    ],
+    reviews: opts.reviews,
+    faq: [
+      {
+        question: "متى تظهر النتائج ؟",
+        answer: "مع الاستعمال المنتظم تبدأ النتائج بالظهور (نقص التساقط ونعومة الشعر) خلال 3 إلى 4 أسابيع.",
+      },
+      ...commonFaq.slice(2),
+    ],
+    contentBlocks: [],
+  };
+}
+
+/** Pack de 4 : le pack complet sans l'applicateur d'huile */
+export const packCheveux4Product = makeHairPack({
+  id: "pack-cheveux-4-005",
+  slug: "pack-cheveux-4-pieces",
+  name: "باك الشعر الكامل (4 قطع)",
+  offerLabel: "باك الشعر الكامل (4 قطع)",
+  image: packCheveux4Img,
+  items: ["oil", "sidr", "roller", "brush"],
+  price: 39,
+  oldPrice: 49,
+  badge: "عرض خاص 🔥 4 قطع بـ 39 د.ت",
+  shortDescription: "زيت إكليل الجبل + سدر بيو + ديرما رولر 540 + فرشة التدليك — 4 قطع بـ 39 د.ت فقط",
+  description:
+    "كل ما تحتاجه لروتين متكامل للعناية بجذور الشعر: زيت إكليل الجبل لتحفيز النمو، الديرما رولر لتنشيط فروة الرأس، فرشة التدليك لتحسين الامتصاص، والسدر البيو لتنظيف وتغذية الشعر. نفس الباك الكامل بدون مشط التوزيع، بـ 39 د.ت فقط.",
+  benefits: [
+    "تقوية الشعر من الجذور والحد من التساقط",
+    "تحفيز نمو الشعر وزيادة كثافته",
+    "تنشيط الدورة الدموية في فروة الرأس",
+    "تنظيف وتغذية الشعر ومنحه لمعاناً ونعومة",
+  ],
+  reviews: [
+    { name: "سناء", city: "صفاقس", rating: 5, text: "الباك كامل والسوم مناسب، الشعر ولى أقوى من الشهر الأول." },
+    { name: "مريم", city: "بنزرت", rating: 5, text: "ما كنتش نحتاج المشط، الباك هذا جاني بالضبط. شكراً." },
+  ],
+});
+
+/** Pack de 3 : stimulation de la pousse */
+export const packCheveuxTrioPousseProduct = makeHairPack({
+  id: "pack-cheveux-3-pousse-006",
+  slug: "pack-trio-pousse-cheveux",
+  name: "تريو تحفيز النمو (3 قطع)",
+  offerLabel: "تريو تحفيز النمو (3 قطع)",
+  image: packTrioPousseImg,
+  items: ["oil", "roller", "brush"],
+  price: 32,
+  oldPrice: 45,
+  badge: "الأكثر فعالية ضد التساقط 💪",
+  shortDescription: "زيت إكليل الجبل + ديرما رولر 540 + فرشة التدليك — 3 قطع بـ 32 د.ت",
+  description:
+    "الثلاثي الأقوى ضد تساقط الشعر: الديرما رولر ينشط فروة الرأس، زيت إكليل الجبل يغذي الجذور ويحفز النمو، وفرشة التدليك تساعد على امتصاص الزيت بعمق.",
+  benefits: [
+    "تحفيز نمو الشعر وزيادة كثافته",
+    "الحد من التساقط بفضل زيت إكليل الجبل",
+    "امتصاص أفضل للزيت بالديرما رولر والتدليك",
+  ],
+  reviews: [
+    { name: "أنيس", city: "تونس", rating: 5, text: "الديرما رولر مع الزيت نتيجة واضحة في الفراغات." },
+    { name: "هالة", city: "نابل", rating: 5, text: "التساقط نقص برشا بعد 3 أسابيع." },
+  ],
+});
+
+/** Pack de 3 : soin naturel doux (sans derma roller) */
+export const packCheveuxTrioNaturelProduct = makeHairPack({
+  id: "pack-cheveux-3-naturel-007",
+  slug: "pack-trio-soin-naturel",
+  name: "تريو العناية الطبيعية (3 قطع)",
+  offerLabel: "تريو العناية الطبيعية (3 قطع)",
+  image: packTrioNaturelImg,
+  items: ["oil", "sidr", "brush"],
+  price: 29,
+  oldPrice: 42,
+  badge: "طبيعي 100% 🌿",
+  shortDescription: "زيت إكليل الجبل + سدر بيو + فرشة التدليك — 3 قطع بـ 29 د.ت",
+  description:
+    "روتين طبيعي ولطيف للعناية بالشعر: زيت إكليل الجبل لتغذية الجذور، السدر البيو لتنظيف الشعر وتقويته، وفرشة التدليك لتدليك مريح وتنظيف عميق لفروة الرأس. مناسب لمن لا يريد استعمال الديرما رولر.",
+  benefits: ["تغذية الجذور وتقوية الشعر", "تنظيف طبيعي بلا كيمياء بالسدر", "شعر ناعم ولامع"],
+  reviews: [
+    { name: "نور", city: "سوسة", rating: 5, text: "السدر مع الزيت خلاو شعري ناعم برشا." },
+    { name: "ريم", city: "القيروان", rating: 5, text: "منتجات طبيعية والفرشة مريحة برشا." },
+  ],
+});
+
+/** Pack de 2 : duo anti-chute */
+export const packCheveuxDuoAntiChuteProduct = makeHairPack({
+  id: "pack-cheveux-2-antichute-008",
+  slug: "pack-duo-anti-chute",
+  name: "ديو ضد التساقط (قطعتين)",
+  offerLabel: "ديو ضد التساقط (قطعتين)",
+  image: packDuoAntiChuteImg,
+  items: ["oil", "roller"],
+  price: 25,
+  oldPrice: 35,
+  badge: "الثنائي المثالي ✨",
+  shortDescription: "زيت إكليل الجبل + ديرما رولر 540 — قطعتين بـ 25 د.ت",
+  description:
+    "الثنائي الأساسي لتحفيز نمو الشعر: الديرما رولر ينشط فروة الرأس ويحسن امتصاص زيت إكليل الجبل الذي يقوي الجذور ويحد من التساقط.",
+  benefits: ["تحفيز نمو الشعر", "الحد من التساقط", "امتصاص أفضل للزيت بالديرما رولر"],
+  reviews: [
+    { name: "كريم", city: "المنستير", rating: 5, text: "بسيط وفعال، نستعملو مرتين في الجمعة." },
+    { name: "أسماء", city: "قابس", rating: 5, text: "سوم مزيان ونتيجة باهية." },
+  ],
+});
+
+/** Pack de 2 : duo nettoyage & massage */
+export const packCheveuxDuoNettoyageProduct = makeHairPack({
+  id: "pack-cheveux-2-nettoyage-009",
+  slug: "pack-duo-sidr-brosse",
+  name: "ديو السدر والتدليك (قطعتين)",
+  offerLabel: "ديو السدر والتدليك (قطعتين)",
+  image: packDuoSidrBrosseImg,
+  items: ["sidr", "brush"],
+  price: 19,
+  oldPrice: 29,
+  badge: "أفضل سعر 💚",
+  shortDescription: "سدر بيو + فرشة التدليك — قطعتين بـ 19 د.ت",
+  description:
+    "لتنظيف عميق وطبيعي لفروة الرأس: السدر البيو ينظف ويغذي الشعر بلطف، وفرشة التدليك السيليكونية تزيل الشوائب وتنشط الدورة الدموية أثناء الغسل.",
+  benefits: ["تنظيف عميق لفروة الرأس", "تقليل القشرة والدهون الزائدة", "شعر ناعم ولامع بشكل طبيعي"],
+  reviews: [
+    { name: "إيناس", city: "أريانة", rating: 5, text: "الفرشة مع السدر في الدوش حاجة ممتازة." },
+    { name: "سلمى", city: "مدنين", rating: 5, text: "سوم صغير وجودة باهية." },
+  ],
+});
+
+export const products: Product[] = [
+  mainProduct,
+  dihenKebritProduct,
+  packDuoProduct,
+  packCheveuxProduct,
+  packCheveux4Product,
+  packCheveuxTrioPousseProduct,
+  packCheveuxTrioNaturelProduct,
+  packCheveuxDuoAntiChuteProduct,
+  packCheveuxDuoNettoyageProduct,
+];
 
 export const categories = [
   { id: "all", label: "جميع المنتجات", emoji: "✨" },
   { id: "Soins des pieds & corps", label: "فازلين الحبة السوداء", emoji: "🌿" },
   { id: "Soins de la peau", label: "دهان كبريت طبيعي", emoji: "🟡" },
   { id: "Packs Économiques", label: "باك التوفير (Pack Duo)", emoji: "🎁" },
-  { id: "Soins des cheveux", label: "باك الشعر الطبيعي", emoji: "💆" },
+  { id: "Soins des cheveux", label: "باقات الشعر الطبيعي", emoji: "💆" },
 ];
 
 export const homeReviews: Review[] = [

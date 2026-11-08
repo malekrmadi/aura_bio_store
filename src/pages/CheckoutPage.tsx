@@ -16,6 +16,7 @@ import { trackInitiateCheckout } from "@/lib/metaPixel";
 const emptyCustomer: Customer = {
   name: "",
   phone: "",
+  phone2: "",
   governorate: "",
   city: "",
   address: "",
@@ -58,6 +59,9 @@ export function CheckoutPage() {
     const digitsOnly = customer.phone.replace(/\D/g, "");
     if (digitsOnly.length !== 8)
       e['phone'] = "يرجى كتابة 8 أرقام • Numéro invalide (8 chiffres).";
+    const phone2Digits = (customer.phone2 ?? "").replace(/\D/g, "");
+    if (phone2Digits.length > 0 && phone2Digits.length !== 8)
+      e['phone2'] = "يرجى كتابة 8 أرقام • Numéro invalide (8 chiffres).";
     if (!customer.governorate)
       e['governorate'] = "يرجى اختيار الولاية • Choisissez votre gouvernorat.";
     if (customer.address.trim().length === 0)
@@ -75,6 +79,7 @@ export function CheckoutPage() {
         ...customer,
         name: customer.name.trim().slice(0, 100),
         phone: customer.phone.trim().slice(0, 20),
+        phone2: (customer.phone2 ?? "").trim().slice(0, 20),
         city: customer.city.trim().slice(0, 100),
         address: customer.address.trim().slice(0, 300),
         note: (customer.note ?? "").trim().slice(0, 300),
@@ -146,6 +151,21 @@ export function CheckoutPage() {
               onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
             />
             {errors['phone'] && <p className="mt-1 text-xs font-semibold text-destructive">{errors['phone']}</p>}
+          </div>
+          <div>
+            <label htmlFor="phone2" className="text-sm font-bold text-foreground block">
+              رقم هاتف ثاني <span className="font-normal text-muted-foreground">(2ème numéro - facultatif)</span>
+            </label>
+            <input
+              id="phone2"
+              type="tel"
+              inputMode="tel"
+              className={field}
+              maxLength={20}
+              value={customer.phone2 ?? ""}
+              onChange={(e) => setCustomer({ ...customer, phone2: e.target.value })}
+            />
+            {errors['phone2'] && <p className="mt-1 text-xs font-semibold text-destructive">{errors['phone2']}</p>}
           </div>
 
           <div>

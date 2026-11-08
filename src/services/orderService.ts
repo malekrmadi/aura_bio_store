@@ -9,11 +9,15 @@ export type OrderItem = {
   unitPrice: number;
   lineTotal: number;
   offerLabel?: string | undefined;
+  /** Contenu du pack (articles à préparer), si applicable */
+  contents?: string | undefined;
 };
 
 export type Customer = {
   name: string;
   phone: string;
+  /** Deuxième numéro (facultatif) */
+  phone2?: string;
   governorate: string;
   city: string;
   address: string;
